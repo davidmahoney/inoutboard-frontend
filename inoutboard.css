@@ -1,0 +1,37 @@
+.sections {
+	background-color: #bbb;
+	padding: 0;
+	margin: 10px 0 16px 0;
+	border-radius: 7px;
+	list-style-type: none;
+}
+
+.sections li {
+	font-size: 16px;
+	font-weight: bold;
+	display: inline-block;
+	padding: 0.5em 1.5em;
+	cursor: pointer;
+	color: #444;
+	text-shadow: #f7f7f7 0 1px 1px;
+	border-left: 1px solid #ddd;
+	border-right: 1px solid #888;
+}
+
+.sections li:first-child {
+	border-left: none;
+	border-radius: 7px 0 0 7px;
+}
+
+.sections li:hover {
+	background-color: #ddd;
+}
+
+.sections .selected {
+	background-color: #444 !important;
+	color: white;
+	text-shadow: none;
+	border-right-color: #aaa;
+	border-left: none;
+	box-shadow: inset 1px 2px 6px #070707;
+}

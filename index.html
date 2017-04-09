@@ -1,0 +1,46 @@
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		<title>In/Out Board</title>
+		<link href="inoutboard.css" rel="stylesheet" type="text/css" />
+	</head>
+	<body>
+		<h1>In/Out Board</h1>
+
+		<ul class="sections" data-bind="foreach: sections">
+			<li data-bind="text: $data, 
+				css: { selected: $data == $root.chosenSectionId() },
+				click: $root.goToSection"></li>
+		</ul>
+		<div class="mystatus" data-bind="with: user">
+			<form>
+			I am...
+			<p data-bind="text: Name"></p>
+			<label for="statusField">I am</label>
+			<select id="statusField" data-bind="options: $root.statuses,
+												value: Status">
+			</select>
+			<label for="remarksField">Notes: </label>
+			<input type="text" id="remarksField" data-bind="attr: {value: Remarks}"></input>
+			<button>Save</button>
+		</form>
+		</div>
+		<div class="people">
+			<table data-bind="with: people">
+				<thead><th>Name</th><th>Status</th></thead>
+				<tbody data-bind="foreach: $data">
+					<tr>
+						<td data-bind="text: Name"></td> 
+						<td data-bind="text: StatusValue"></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<script src="./node_modules/requirejs/require.js"></script>
+		<script src="./built/require-config.js"></script>
+		<script>
+			require(["built/inoutboard"]);
+		</script>
+	</body>
+</html>
+
