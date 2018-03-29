@@ -60,6 +60,7 @@ class InOutBoardViewModel {
 		}
 		xhr.onload = () => {
 			this.password(null);
+			this.mustLogin(null);
 			this.goToSection("Me");
 		}
 		let content = JSON.stringify({Username: this.username(), Password: this.password()});
