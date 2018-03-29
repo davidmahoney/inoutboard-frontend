@@ -49,7 +49,7 @@ class InOutBoardViewModel {
 
 	login = () => {
 		let xhr = new XMLHttpRequest();
-		xhr.open("POST", "http://zaphod:8080/login");
+		xhr.open("POST", "/login");
 		//xhr.setRequestHeader("Authorization", "Basic " + btoa(this.username() + ":" + this.password()));
 		//xhr.withCredentials = true;
 		xhr.onerror = () => {
@@ -90,7 +90,7 @@ class InOutBoardViewModel {
 			}
 			this.people(null);
 			let xhr = new XMLHttpRequest();
-			xhr.open("GET", "http://zaphod:8080/api/user/");
+			xhr.open("GET", "/api/user/");
 			//xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
 			//xhr.withCredentials = true;
 			xhr.onload = (ev) => {
