@@ -6,7 +6,16 @@
 	</head>
 	<body>
 		<h1>In/Out Board</h1>
-
+		<form data-bind="with: mustLogin">
+			<p>
+			<label for="usernameField">Username: </label>
+			<input type="text" id="usernameField" data-bind="value: $root.username"></input>
+			<p>
+			<label for="passwordField">Password: </label>
+			<input type="password" id="passwordField" data-bind="value: $root.password"></input>
+			<p>
+			<input type="button" value="Login" data-bind="click: $root.login"></input>
+		</form>
 		<ul class="sections" data-bind="foreach: sections">
 			<li data-bind="text: $data, 
 				css: { selected: $data == $root.chosenSectionId() },
@@ -18,28 +27,32 @@
 			<p data-bind="text: Name"></p>
 			<label for="statusField">I am</label>
 			<select id="statusField" data-bind="options: $root.statuses,
-												value: Status">
+												value: StatusValue
+												event: {blur: save}">
 			</select>
+			<p>
 			<label for="remarksField">Notes: </label>
-			<input type="text" id="remarksField" data-bind="attr: {value: Remarks}"></input>
-			<button>Save</button>
+			<input type="text" id="remarksField" data-bind="value: Remarks"></input>
+			<p>
+			<button data-bind="click: $root.save">Save</button>
 		</form>
 		</div>
 		<div class="people">
-			<table data-bind="with: people">
-				<thead><th>Name</th><th>Status</th></thead>
+			<table class="people" data-bind="with: people">
+				<thead><th>Name</th><th>Status</th><th>Notes</th></thead>
 				<tbody data-bind="foreach: $data">
 					<tr>
 						<td data-bind="text: Name"></td> 
 						<td data-bind="text: StatusValue"></td>
+						<td data-bind="text: Remarks"></td>
 					</tr>
 				</tbody>
 			</table>
 		</div>
-		<script src="./node_modules/requirejs/require.js"></script>
-		<script src="./built/require-config.js"></script>
+		<script src="require.js"></script>
+		<script src="require-config.js"></script>
 		<script>
-			require(["built/inoutboard"]);
+			require(["inoutboard"]);
 		</script>
 	</body>
 </html>
