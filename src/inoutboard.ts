@@ -7,6 +7,7 @@ class Person {
 	Status: KnockoutObservable<number>
 	StatusValue: KnockoutObservable<string>
 	Remarks: KnockoutObservable<string>
+	IsEditing: KnockoutObservable<boolean>
 
 	constructor() {
 		this.Name = ko.observable(null);
@@ -161,6 +162,10 @@ class InOutBoardViewModel {
 			getPeople();
 		}
 		this.chosenSectionId(section);
+	}
+
+	editPerson = (person: Person) => {
+		person.IsEditing(true);
 	}
 }
 
