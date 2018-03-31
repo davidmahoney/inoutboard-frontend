@@ -21,7 +21,30 @@ class Person {
 			case "In Field": this.Status(2); break;
 			}
 		});
+		this.IsEditing = ko.observable(false);
 	}
+	save = () => {
+		let xhr = new XMLHttpRequest();
+		xhr.open("PUT", "/api/user/" + this.Username);
+		xhr.onerror = () => {
+			console.log("Save failed");
+			};
+			
+		let payload = JSON.stringify({
+			ID: this.ID, 
+			Name: this.Name,
+			Username: this.Username, 
+			Status: this.Status(),
+			StatusValue: this.StatusValue(),	
+			Remarks: this.Remarks()
+			});
+
+		xhr.onload = () => {
+			this.IsEditing(false);
+		}
+		xhr.send(payload);
+	}
+
 }
 
 class InOutBoardViewModel {
@@ -51,8 +74,6 @@ class InOutBoardViewModel {
 	login = () => {
 		let xhr = new XMLHttpRequest();
 		xhr.open("POST", "/login");
-		//xhr.setRequestHeader("Authorization", "Basic " + btoa(this.username() + ":" + this.password()));
-		//xhr.withCredentials = true;
 		xhr.onerror = () => {
 			if (xhr.status == 401) {
 				this.mustLogin("true");
@@ -67,23 +88,6 @@ class InOutBoardViewModel {
 		let content = JSON.stringify({Username: this.username(), Password: this.password()});
 		xhr.send(content);
 	}
-	save = () => {
-		let xhr = new XMLHttpRequest();
-		xhr.open("PUT", "/api/user/" + this.user());
-		xhr.onerror = () => {
-			console.log("Save failed");
-			};
-			
-			let payload = JSON.stringify({
-				ID: this.user().ID, 
-				Name: this.user().Name(),
-				Username: this.user().Username, 
-				Status: this.user().Status(),
-			    StatusValue: this.user().StatusValue(),	
-				Remarks: this.user().Remarks()
-				});
-			xhr.send(payload);
-	}
 
 	goToSection = (section: string) => {
 		if (section == "Me") {
@@ -93,8 +97,6 @@ class InOutBoardViewModel {
 			this.people(null);
 			let xhr = new XMLHttpRequest();
 			xhr.open("GET", "/api/user/");
-			//xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
-			//xhr.withCredentials = true;
 			xhr.onload = (ev) => {
 				if (xhr.status < 200 || xhr.status >= 300) {
 				console.log("Failed to load user");
@@ -110,8 +112,8 @@ class InOutBoardViewModel {
 					this.user().Status(user.Status);
 					this.user().StatusValue(user.StatusValue);
 					this.user().Remarks(user.Remarks);
-					this.user().StatusValue.subscribe(this.save);
-					this.user().Remarks.subscribe(this.save);
+					this.user().StatusValue.subscribe(this.user().save);
+					this.user().Remarks.subscribe(this.user().save);
 				}
 			};
 			xhr.onerror = (err) => {
@@ -141,10 +143,14 @@ class InOutBoardViewModel {
 					let mapped = new Array<Person>();
 					for (let jsperson of people) {
 						let person = new Person();
+						person.ID = jsperson.ID;
+						person.Username = jsperson.Username;
 						person.Name(jsperson.Name);
 						person.Status(jsperson.Status);
 						person.StatusValue(jsperson.StatusValue);
 						person.Remarks(jsperson.Remarks);
+						//person.StatusValue.subscribe(person.save);
+						//person.Remarks.subscribe(person.save);
 						mapped.push(person);
 					}
 					this.people(mapped);

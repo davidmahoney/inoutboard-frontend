@@ -39,17 +39,27 @@
 		</form>
 		</div>
 		<div class="people">
+			<form>
 			<table class="people" data-bind="with: people">
 				<thead><th>Name</th><th>Status</th><th>Notes</th></thead>
 				<tbody data-bind="foreach: $data">
 					<tr>
+						<!-- ko if: IsEditing -->
+						<td style="cursor: pointer;" data-bind="click: save">&#x2714;</td>
+						<td data-bind="text: Name"></td> 
+						<td><select data-bind="options: $root.statuses, value: StatusValue"></select></td>
+						<td><input type="text" id=remarksField" data-bind="value: Remarks" /></td>
+						<!-- /ko -->
+						<!-- ko ifnot: IsEditing -->
 						<td style="cursor: pointer;" data-bind="click: $root.editPerson">&#x270e;</td>
 						<td data-bind="text: Name"></td> 
 						<td data-bind="text: StatusValue"></td>
 						<td data-bind="text: Remarks"></td>
+						<!-- /ko -->
 					</tr>
 				</tbody>
 			</table>
+			</form>
 		</div>
 		<script src="require.js"></script>
 		<script src="require-config.js"></script>
