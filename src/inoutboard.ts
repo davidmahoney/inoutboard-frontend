@@ -167,6 +167,7 @@ class InOutBoardViewModel {
 			xhr.send();
 			
 			this.user(new Person());
+			this.chosenSectionId(section);
 
 		} else if (section === "Everyone") {
 			this.user(null);
@@ -211,7 +212,7 @@ class InOutBoardViewModel {
 			};
 				xhr.send();
 			}
-			this.refreshId = setInterval(getPeople, 30000); // five minutes
+			this.refreshId = setInterval(getPeople, 300000); // five minutes
 			getPeople();
 		}
 		this.chosenSectionId(section);

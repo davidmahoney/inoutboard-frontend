@@ -40,7 +40,7 @@
 			<button data-bind="click: $root.save">Save</button>
 		</form>
 		</div>
-		<div class="people">
+		<div class="people" data-bind="visible: (chosenSectionId() == 'Everyone')">
 			<form>
 				<table class="people">
 				<thead><th></th><th>Name</th><th>Status</th><th>Notes</th></thead>
