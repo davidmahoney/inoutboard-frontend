@@ -60,8 +60,8 @@
 						<td style="cursor: pointer;" data-bind="click: $root.editPerson">&#x270e;</td>
 						<td data-bind="text: Name"></td> 
 						<td data-bind="text: StatusValue"></td>
-						<td data-bind="text: (Remarks.length > 50? Remarks.substring(0, 50) + '...': Remarks)"
-							
+						<td data-bind="attr: {title: Remarks}, text: (Remarks().length > 50? Remarks().substring(0, 50) + '...':
+		  Remarks)"
 							></td>
 						<!-- /ko -->
 					</tr>
