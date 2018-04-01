@@ -193,6 +193,13 @@ class InOutBoardViewModel {
 						person.StatusValue(jsperson.StatusValue);
 						person.Remarks(jsperson.Remarks);
 						person.error.subscribe(this.error);
+						person.IsEditing.subscribe((ed) => {
+							if (ed) {
+								clearInterval(this.refreshId);
+							} else {
+								this.refreshId = setInterval(getPeople, 300000); // five minutes
+							}
+						});
 						if (mapped[jsperson.Department] === undefined) {
 							mapped[jsperson.Department] = new Array<Person>();
 						}
