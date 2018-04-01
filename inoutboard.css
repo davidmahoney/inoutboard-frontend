@@ -5,6 +5,13 @@
 		}
 }
 
+tbody.group_header tr td {
+	border-left: none;
+	border-right: none;
+	border-top: none;
+	border-bottom: 2px solid black;
+}
+
 .sections {
 	background-color: #bbb;
 	padding: 0;

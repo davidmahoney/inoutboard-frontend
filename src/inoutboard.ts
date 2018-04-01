@@ -1,5 +1,9 @@
 import * as ko from "knockout";
 
+interface IHash<T> {
+	[key: string]: T
+}
+
 class Person {
 	ID: number
 	Name: KnockoutObservable<string>
@@ -28,8 +32,14 @@ class Person {
 	save = () => {
 		let xhr = new XMLHttpRequest();
 		xhr.open("PUT", "/api/user/" + this.Username);
-		xhr.onerror = () => {
+		xhr.onerror = (ev) => {
 			console.log("Save failed");
+			if (xhr.status == 401) {
+				this.error("Error: unauthorized");
+			}
+			else {
+				this.error("Error: " + xhr.status);
+			}
 			};
 			
 		let payload = JSON.stringify({
@@ -43,15 +53,28 @@ class Person {
 
 		xhr.onload = () => {
 			this.IsEditing(false);
+			if (xhr.status >= 400) {
+				this.error("Error: " + xhr.status + " - " + xhr.statusText);
+			}
 		}
 		xhr.send(payload);
 	}
 
 }
 
+class PersonGroup {
+	label: KnockoutObservable<string>
+	people: KnockoutObservableArray<Person>
+
+	constructor(label: string, people: Person[]) {
+		this.label = ko.observable(label)
+		this.people = ko.observableArray<Person>(people)
+	}
+}
+
 class InOutBoardViewModel {
 	sections: string[] = ["Me", "Everyone"]
-	people: KnockoutObservable<Person[]>
+	people: KnockoutObservableArray<PersonGroup>
 	user: KnockoutObservable<Person>
 	chosenSectionId: KnockoutObservable<string>
 	statuses: KnockoutObservableArray<string>
@@ -67,7 +90,7 @@ class InOutBoardViewModel {
 		this.chosenSectionId = ko.observable(null);
 		this.people = null;
 		this.user = ko.observable(null);
-		this.people = ko.observable(null);
+		this.people = ko.observableArray<PersonGroup>(null);
 		this.statuses = ko.observableArray(["In", "In Field", "Out"]);
 		this.mustLogin = ko.observable(null);
 		this.goToSection("Me");
@@ -120,7 +143,10 @@ class InOutBoardViewModel {
 					this.user().Remarks(user.Remarks);
 					this.user().StatusValue.subscribe(this.user().save);
 					this.user().Remarks.subscribe(this.user().save);
-					this.user().error.subscribe(this.error);
+					this.user().error.subscribe((v) => {
+						console.log(v);
+						this.error(v);
+					});
 				}
 			};
 			xhr.onerror = (err) => {
@@ -146,7 +172,7 @@ class InOutBoardViewModel {
 			this.user(null);
 
 			let getPeople = () => {
-			this.people(new Array<Person>());
+				this.people(new Array<PersonGroup>());
 			let xhr = new XMLHttpRequest();
 			xhr.open("GET", "/api/people/");
 			xhr.withCredentials = true;
@@ -156,7 +182,7 @@ class InOutBoardViewModel {
 				} else if (xhr.status !== 401){
 					this.mustLogin(null);
 					let people = JSON.parse(xhr.response);
-					let mapped = new Array<Person>();
+					let mapped: IHash<Person[]> = {};
 					for (let jsperson of people) {
 						let person = new Person();
 						person.ID = jsperson.ID;
@@ -165,9 +191,16 @@ class InOutBoardViewModel {
 						person.Status(jsperson.Status);
 						person.StatusValue(jsperson.StatusValue);
 						person.Remarks(jsperson.Remarks);
-						mapped.push(person);
+						person.error.subscribe(this.error);
+						if (mapped[jsperson.Department] === undefined) {
+							mapped[jsperson.Department] = new Array<Person>();
+						}
+						mapped[jsperson.Department].push(person);
 					}
-					this.people(mapped);
+					Object.keys(mapped).forEach((k) => {
+						let group = new PersonGroup(k, mapped[k]);
+						this.people.push(group);
+					});
 			} else { this.login(); }
 
 			};
