@@ -22,6 +22,8 @@
 				css: { selected: $data == $root.chosenSectionId() },
 				click: $root.goToSection"></li>
 		</ul>
+		<p data-bind="text: error" class="errorText">
+		</p>
 		<div class="mystatus" data-bind="with: user">
 			<form>
 			I am...
@@ -33,7 +35,7 @@
 			</select>
 			<p>
 			<label for="remarksField">Notes: </label>
-			<input type="text" id="remarksField" data-bind="value: Remarks"></input>
+			<textarea id="remarksField" rows="3" data-bind="value: Remarks"></textarea>
 			<p>
 			<button data-bind="click: $root.save">Save</button>
 		</form>
@@ -41,14 +43,14 @@
 		<div class="people">
 			<form>
 			<table class="people" data-bind="with: people">
-				<thead><th>Name</th><th>Status</th><th>Notes</th></thead>
+				<thead><th></th><th>Name</th><th>Status</th><th>Notes</th></thead>
 				<tbody data-bind="foreach: $data">
 					<tr>
 						<!-- ko if: IsEditing -->
 						<td style="cursor: pointer;" data-bind="click: save">&#x2714;</td>
 						<td data-bind="text: Name"></td> 
 						<td><select data-bind="options: $root.statuses, value: StatusValue"></select></td>
-						<td><input type="text" id=remarksField" data-bind="value: Remarks" /></td>
+						<td><textarea id=remarksField" rows="3" data-bind="value: Remarks" ></textarea></td>
 						<!-- /ko -->
 						<!-- ko ifnot: IsEditing -->
 						<td style="cursor: pointer;" data-bind="click: $root.editPerson">&#x270e;</td>

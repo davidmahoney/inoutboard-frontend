@@ -8,8 +8,10 @@ class Person {
 	StatusValue: KnockoutObservable<string>
 	Remarks: KnockoutObservable<string>
 	IsEditing: KnockoutObservable<boolean>
+	error: KnockoutObservable<string>
 
 	constructor() {
+		this.error = ko.observable(null)
 		this.Name = ko.observable(null);
 		this.Status = ko.observable(null);
 		this.StatusValue = ko.observable(null);
@@ -56,10 +58,12 @@ class InOutBoardViewModel {
 	mustLogin: KnockoutObservable<string>
 	username: KnockoutObservable<string>
 	password: KnockoutObservable<string>
+	error: KnockoutObservable<string>
 	refreshId: number
 
 
 	constructor() {
+		this.error = ko.observable("");
 		this.chosenSectionId = ko.observable(null);
 		this.people = null;
 		this.user = ko.observable(null);
@@ -90,6 +94,7 @@ class InOutBoardViewModel {
 	}
 
 	goToSection = (section: string) => {
+		this.error("");
 		if (section == "Me") {
 			if (this.refreshId > 0) {
 				clearInterval(this.refreshId);
@@ -105,6 +110,7 @@ class InOutBoardViewModel {
 						this.mustLogin("true");
 					}
 				} else {
+					this.mustLogin(null);
 					let user = JSON.parse(xhr.response);
 					this.user().ID = user.ID;
 					this.user().Name(user.Name);
@@ -114,6 +120,7 @@ class InOutBoardViewModel {
 					this.user().Remarks(user.Remarks);
 					this.user().StatusValue.subscribe(this.user().save);
 					this.user().Remarks.subscribe(this.user().save);
+					this.user().error.subscribe(this.error);
 				}
 			};
 			xhr.onerror = (err) => {
@@ -121,6 +128,14 @@ class InOutBoardViewModel {
 					this.mustLogin("true");
 					this.user(null);
 					this.people(null);
+				}
+				else {
+					if (xhr.status == 0) {
+						this.error("Error: Could not contact server");
+					}
+					else {
+						this.error("Failed to get user details: Error " + xhr.status);
+					}
 				}
 			};
 			xhr.send();
@@ -139,6 +154,7 @@ class InOutBoardViewModel {
 				if (xhr.status < 200 || xhr.status >= 300) {
 					console.log("Ruh-roh!");
 				} else if (xhr.status !== 401){
+					this.mustLogin(null);
 					let people = JSON.parse(xhr.response);
 					let mapped = new Array<Person>();
 					for (let jsperson of people) {
@@ -149,8 +165,6 @@ class InOutBoardViewModel {
 						person.Status(jsperson.Status);
 						person.StatusValue(jsperson.StatusValue);
 						person.Remarks(jsperson.Remarks);
-						//person.StatusValue.subscribe(person.save);
-						//person.Remarks.subscribe(person.save);
 						mapped.push(person);
 					}
 					this.people(mapped);
