@@ -1,5 +1,7 @@
-<html>
+<!DOCTYPE html>
+<html lang="en-us">
 	<head>
+		<meta http-equiv="x-ua-compatible" content="IE=edge" />
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<title>In/Out Board</title>
@@ -10,12 +12,12 @@
 		<form data-bind="with: mustLogin">
 			<p>
 			<label for="usernameField">Username: </label>
-			<input type="text" id="usernameField" data-bind="value: $root.username"></input>
+			<input type="text" id="usernameField" data-bind="value: $root.username">
 			<p>
 			<label for="passwordField">Password: </label>
-			<input type="password" id="passwordField" data-bind="value: $root.password"></input>
+			<input type="password" id="passwordField" data-bind="value: $root.password">
 			<p>
-			<input type="button" value="Login" data-bind="click: $root.login"></input>
+			<input type="button" value="Login" data-bind="click: $root.login">
 		</form>
 		<ul class="sections" data-bind="foreach: sections">
 			<li data-bind="text: $data, 
@@ -34,8 +36,8 @@
 												event: {blur: save}">
 			</select>
 			<p>
-			<label for="remarksField">Notes: </label>
-			<textarea id="remarksField" rows="3" data-bind="value: Remarks"></textarea>
+			<label for="remarksText">Notes: </label>
+			<textarea id="remarksText" rows="3" data-bind="value: Remarks"></textarea>
 			<p>
 			<button data-bind="click: $root.save">Save</button>
 		</form>
@@ -43,10 +45,10 @@
 		<div class="people" data-bind="visible: (chosenSectionId() == 'Everyone')">
 			<form>
 				<table class="people">
-				<thead><th></th><th>Name</th><th>Status</th><th>Notes</th></thead>
+					<thead><tr><th></th><th>Name</th><th>Status</th><th>Notes</th></tr></thead>
 				<!-- ko foreach: $root.people -->
 				<tbody class="group_header">
-					<tr><td/><td data-bind="text: label"/><td/><td/></tr>
+					<tr><td></td><td data-bind="text: label"></td><td></td><td></td></tr>
 				</tbody>
 				<tbody data-bind="foreach: people">
 					<tr>
@@ -54,7 +56,7 @@
 						<td style="cursor: pointer;" data-bind="click: save">&#x2714;</td>
 						<td data-bind="text: Name"></td> 
 						<td><select data-bind="options: $root.statuses, value: StatusValue"></select></td>
-						<td><textarea id=remarksField" rows="3" data-bind="value: Remarks" ></textarea></td>
+						<td><textarea id="remarksField" rows="3" data-bind="value: Remarks" ></textarea></td>
 						<!-- /ko -->
 						<!-- ko ifnot: IsEditing -->
 						<td style="cursor: pointer;" data-bind="click: $root.editPerson">&#x270e;</td>
