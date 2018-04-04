@@ -73,7 +73,7 @@ class PersonGroup {
 }
 
 class InOutBoardViewModel {
-	sections: string[] = ["Me", "Everyone"]
+	sections:  KnockoutObservableArray<string>
 	people: KnockoutObservableArray<PersonGroup>
 	user: KnockoutObservable<Person>
 	chosenSectionId: KnockoutObservable<string>
@@ -82,6 +82,7 @@ class InOutBoardViewModel {
 	username: KnockoutObservable<string>
 	password: KnockoutObservable<string>
 	error: KnockoutObservable<string>
+	selectedUser: KnockoutObservable<Person>
 	refreshId: number
 
 
@@ -93,9 +94,11 @@ class InOutBoardViewModel {
 		this.people = ko.observableArray<PersonGroup>(null);
 		this.statuses = ko.observableArray(["In", "In Field", "Out"]);
 		this.mustLogin = ko.observable(null);
-		this.goToSection("Me");
 		this.username = ko.observable("");
 		this.password = ko.observable("");
+		this.sections = ko.observableArray(["Me", "Everyone"])
+		this.selectedUser = ko.observable(null);
+		this.goToSection("Me");
 	}
 
 	login = () => {
@@ -118,6 +121,11 @@ class InOutBoardViewModel {
 
 	goToSection = (section: string) => {
 		this.error("");
+		if ((section === "Me" || section === "Everyone") && this.sections().length > 2) {
+			this.selectedUser(null);
+			this.sections.pop();
+		}
+
 		if (section == "Me") {
 			if (this.refreshId > 0) {
 				clearInterval(this.refreshId);
@@ -221,12 +229,20 @@ class InOutBoardViewModel {
 			}
 			this.refreshId = setInterval(getPeople, 300000); // five minutes
 			getPeople();
+		} else { // individual person details
+			
 		}
 		this.chosenSectionId(section);
 	}
 
 	editPerson = (person: Person) => {
 		person.IsEditing(true);
+	}
+
+	viewPerson = (person: Person) => {
+		this.sections.push(person.Name());
+		this.selectedUser(person);
+		this.goToSection(person.Name());
 	}
 }
 

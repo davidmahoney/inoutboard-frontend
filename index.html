@@ -51,7 +51,7 @@
 					<tr><td></td><td data-bind="text: label"></td><td></td><td></td></tr>
 				</tbody>
 				<tbody data-bind="foreach: people">
-					<tr>
+					<tr data-bind="click: $root.viewPerson">
 						<!-- ko if: IsEditing -->
 						<td style="cursor: pointer;" data-bind="click: save">&#x2714;</td>
 						<td data-bind="text: Name"></td> 
@@ -71,6 +71,9 @@
 				<!-- /ko -->
 			</table>
 			</form>
+		</div>
+		<div class="person" data-bind="visible: chosenSectionId() === $root.sections()[2], with: selectedUser">
+			<h2 data-bind="text: Name"></h2>
 		</div>
 		<script src="require.js"></script>
 		<script src="require-config.js"></script>
