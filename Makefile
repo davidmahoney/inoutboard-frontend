@@ -1,7 +1,7 @@
 TSC=tsc
 LIBS=built/knockout-latest.js built/require.js
 FILES=built/index.html built/inoutboard.css
-SRC=build/src/inoutboard.ts build/src/require-config.ts
+SRC=built/src/inoutboard.ts built/src/require-config.ts
 RJS=node_modules/requirejs/bin/r.js
 
 all: build
@@ -20,7 +20,7 @@ $(FILES): index.html inoutboard.css
 	cp index.html built
 	cp inoutboard.css built
 
-built/inoutboard.js: src/inoutboard.ts $(FILES)
+built/inoutboard.js: src/inoutboard.ts
 	$(TSC)
 	cp built/require-config.js built/inoutboard.built.js
 
