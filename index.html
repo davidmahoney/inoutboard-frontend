@@ -48,7 +48,7 @@
 		<div class="people" data-bind="visible: (chosenSectionId() == 'Everyone')">
 			<form>
 				<table class="people">
-					<thead><tr><th></th><th>Name</th><th>Status</th><th class="desktop-only">Last Changed By</th><th class="desktop-only">Last Changed Time</th><th>Notes</th></tr></thead>
+					<thead><tr><th></th><th>Name</th><th>Status</th><th class="desktop-only">Modified By</th><th class="desktop-only">Modified</th><th>Notes</th></tr></thead>
 				<!-- ko foreach: $root.people -->
 				<tbody class="group_header">
 					<tr><td></td><td data-bind="text: label"></td><td></td><td></td><td></td><td></td></tr>
@@ -94,11 +94,11 @@
 				<dt data-bind="text: LastEditTime.formatted"></dt>
 			</dl
 		</div>
-		<script type="text/javascript" src="require.js"></script>
+		<script data-main="inoutboard.built" type="text/javascript" src="require.js"></script><!--
 		<script type="text/javascript" src="require-config.js"></script>
 		<script>
 			require(["inoutboard"]);
-		</script>
+		</script> -->
 	</body>
 </html>
 

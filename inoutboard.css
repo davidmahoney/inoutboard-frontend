@@ -19,8 +19,7 @@ tbody.group_header tr td {
 .sections {
 	background-color: #bbb;
 	padding: 0;
-	margin: 10px 0 16px 0;
-	border-radius: 7px;
+	margin: 0px 0 16px 0;
 	list-style-type: none;
 }
 
@@ -38,6 +37,7 @@ tbody.group_header tr td {
 
 .sections li:first-child {
 	border-left: none;
+	margin-left: 8px;
 	border-radius: 7px 0 0 7px;
 }
 
@@ -115,11 +115,10 @@ tbody.group_header tr td {
 	height: 100%;
 	width: 100%;
 	color: #222244;
-	padding: 8px;
 }
 
 .mystatus {
-
+	margin: 8px;
 }
 @media (max-width: 480px) {
 .desktop-only {

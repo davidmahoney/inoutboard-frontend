@@ -2,6 +2,7 @@ TSC=tsc
 LIBS=built/knockout-latest.js built/require.js
 FILES=built/index.html built/inoutboard.css
 SRC=build/src/inoutboard.ts build/src/require-config.ts
+RJS=node_modules/requirejs/bin/r.js
 
 all: build
 
@@ -19,15 +20,18 @@ $(FILES): index.html inoutboard.css
 	cp index.html built
 	cp inoutboard.css built
 
-built/inoutboard.js: src/inoutboard.ts
+built/inoutboard.js: src/inoutboard.ts $(FILES)
 	$(TSC)
-	cp index.html inoutboard.css built
+	cp built/require-config.js built/inoutboard.built.js
 
 static: $(LIBS) $(FILES)
 
 clean:
 	-rm built/*.css built/inoutboard.js built/*.html
 
+bundle: built/inoutboard.js $(LIBS)
+	$(RJS) -o tools/build.js baseUrl=built mainConfigFile=../built/require-config.js out=built/inoutboard.built.js
+	
 test:
 	@NODE_ENV=test ./node_modules/.bin/mocha --recursive --reporter $(REPORTER) --timeout 3000
 

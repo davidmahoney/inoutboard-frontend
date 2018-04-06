@@ -5,3 +5,5 @@ require.config({
 	"knockout": "knockout-latest",
 	}
 });
+
+require(["inoutboard"]);
