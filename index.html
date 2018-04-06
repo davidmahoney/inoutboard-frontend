@@ -8,7 +8,10 @@
 		<link href="inoutboard.css" rel="stylesheet" type="text/css" />
 	</head>
 	<body>
-		<h1>In/Out Board</h1>
+		<div class="header">
+			<img src="logo.png"></img>
+			<h1>In/Out Board</h1>
+		</div>
 		<form data-bind="with: mustLogin">
 			<p>
 			<label for="usernameField">Username: </label>
@@ -17,7 +20,7 @@
 			<label for="passwordField">Password: </label>
 			<input type="password" id="passwordField" data-bind="value: $root.password">
 			<p>
-			<input type="button" value="Login" data-bind="click: $root.login">
+			<input type="submit" value="Login" data-bind="click: $root.login">
 		</form>
 		<ul class="sections" data-bind="foreach: sections">
 			<li data-bind="text: $data, 
@@ -45,10 +48,10 @@
 		<div class="people" data-bind="visible: (chosenSectionId() == 'Everyone')">
 			<form>
 				<table class="people">
-					<thead><tr><th></th><th>Name</th><th>Status</th><th>Notes</th></tr></thead>
+					<thead><tr><th></th><th>Name</th><th>Status</th><th class="desktop-only">Last Changed By</th><th class="desktop-only">Last Changed Time</th><th>Notes</th></tr></thead>
 				<!-- ko foreach: $root.people -->
 				<tbody class="group_header">
-					<tr><td></td><td data-bind="text: label"></td><td></td><td></td></tr>
+					<tr><td></td><td data-bind="text: label"></td><td></td><td></td><td></td><td></td></tr>
 				</tbody>
 				<tbody data-bind="foreach: people">
 					<tr data-bind="click: $root.viewPerson">
@@ -56,12 +59,16 @@
 						<td style="cursor: pointer;" data-bind="click: save">&#x2714;</td>
 						<td data-bind="text: Name"></td> 
 						<td><select data-bind="options: $root.statuses, value: StatusValue"></select></td>
-						<td><textarea id="remarksField" rows="3" data-bind="value: Remarks" ></textarea></td>
+						<td colspan="3"><textarea id="remarksField" rows="3" data-bind="value: Remarks" ></textarea></td>
+						<td class="desktop-only"></td>
+						<td class="desktop-only"></td>
 						<!-- /ko -->
 						<!-- ko ifnot: IsEditing -->
-						<td style="cursor: pointer;" data-bind="click: $root.editPerson">&#x270e;</td>
+						<td style="cursor: pointer;" data-bind="click: $root.editPerson, clickBubble: false">&#x270e;</td>
 						<td data-bind="text: Name"></td> 
 						<td data-bind="text: StatusValue"></td>
+						<td class="desktop-only" data-bind="text: LastEditor"></td>
+						<td class="desktop-only" data-bind="text: LastEditTime().toLocaleDateString('en-ca', {hour: '2-digit', minute: '2-digit'})"></td>
 						<td data-bind="attr: {title: Remarks}, text: (Remarks().length > 50? Remarks().substring(0, 50) + '...':
 		  Remarks)"
 							></td>
@@ -74,9 +81,21 @@
 		</div>
 		<div class="person" data-bind="visible: chosenSectionId() === $root.sections()[2], with: selectedUser">
 			<h2 data-bind="text: Name"></h2>
+			<dl>
+				<dd>Department</dd>
+				<dt data-bind="text: Group"></dt>
+				<dd>Telehone</dd>
+				<dt data-bind="text: Telephone"></dt>
+				<dd>Mobile</dd>
+				<dt data-bind="text: Mobile"></dt>
+				<dd>Work Site</dd>
+				<dt data-bind="text: Office"></dt>
+				<dd>Last Edit Time</dd>
+				<dt data-bind="text: LastEditTime.formatted"></dt>
+			</dl
 		</div>
-		<script src="require.js"></script>
-		<script src="require-config.js"></script>
+		<script type="text/javascript" src="require.js"></script>
+		<script type="text/javascript" src="require-config.js"></script>
 		<script>
 			require(["inoutboard"]);
 		</script>

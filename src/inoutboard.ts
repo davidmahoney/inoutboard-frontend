@@ -12,10 +12,16 @@ class Person {
 	StatusValue: KnockoutObservable<string>
 	Remarks: KnockoutObservable<string>
 	IsEditing: KnockoutObservable<boolean>
+	LastEditor: KnockoutObservable<string>
+	LastEditTime: KnockoutObservable<Date>
+	Telephone: KnockoutObservable<string>
+	Mobile: KnockoutObservable<string>
+	Office: KnockoutObservable<string>
+	Group: KnockoutObservable<string>
 	error: KnockoutObservable<string>
 
 	constructor() {
-		this.error = ko.observable(null)
+		this.error = ko.observable(null);
 		this.Name = ko.observable(null);
 		this.Status = ko.observable(null);
 		this.StatusValue = ko.observable(null);
@@ -28,6 +34,15 @@ class Person {
 			}
 		});
 		this.IsEditing = ko.observable(false);
+		this.LastEditor = ko.observable(null);
+		this.LastEditTime = ko.observable(null);
+		this.LastEditTime.formatted = ko.pureComputed(() => {
+			return this.LastEditTime().toLocaleDateString('en-ca', {hour: '2-digit', minute: '2-digit'});
+		});
+		this.Group = ko.observable(null);
+		this.Telephone = ko.observable(null);
+		this.Mobile = ko.observable(null);
+		this.Office = ko.observable(null);
 	}
 	save = () => {
 		let xhr = new XMLHttpRequest();
@@ -56,6 +71,9 @@ class Person {
 			if (xhr.status >= 400) {
 				this.error("Error: " + xhr.status + " - " + xhr.statusText);
 			}
+			let jsperson = JSON.parse(xhr.response);
+			this.LastEditor(jsperson.LastEditor);
+			this.LastEditTime(new Date(jsperson.LastEditTime));
 		}
 		xhr.send(payload);
 	}
@@ -150,7 +168,12 @@ class InOutBoardViewModel {
 					this.user().StatusValue(user.StatusValue);
 					this.user().Remarks(user.Remarks);
 					this.user().StatusValue.subscribe(this.user().save);
+					this.user().LastEditTime(user.LastEditTime);
 					this.user().Remarks.subscribe(this.user().save);
+					this.user().Group(user.Department);
+					this.user().Telephone(user.Telephone);
+					this.user().Mobile(user.Mobile);
+					this.user().Office(user.Office);
 					this.user().error.subscribe((v) => {
 						console.log(v);
 						this.error(v);
@@ -201,6 +224,12 @@ class InOutBoardViewModel {
 						person.StatusValue(jsperson.StatusValue);
 						person.Remarks(jsperson.Remarks);
 						person.error.subscribe(this.error);
+						person.LastEditor(jsperson.LastEditor);
+						person.LastEditTime(new Date(jsperson.LastEditTime));
+						person.Group(jsperson.Department);
+						person.Telephone(jsperson.Telephone);
+						person.Mobile(jsperson.Mobile);
+						person.Office(jsperson.Office);
 						person.IsEditing.subscribe((ed) => {
 							if (ed) {
 								clearInterval(this.refreshId);
@@ -240,6 +269,7 @@ class InOutBoardViewModel {
 	}
 
 	viewPerson = (person: Person) => {
+		if (person.IsEditing()) { return; }
 		this.sections.push(person.Name());
 		this.selectedUser(person);
 		this.goToSection(person.Name());
