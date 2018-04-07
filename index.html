@@ -9,24 +9,27 @@
 	</head>
 	<body>
 		<div class="header">
-			<img src="logo.png"></img>
+			<div>
+			<img src="logo.png"/>
 			<h1>In/Out Board</h1>
+			</div>
+			<ul class="sections" data-bind="visible: !mustLogin(), foreach: sections">
+				<li data-bind="text: $data, 
+					css: { selected: $data == $root.chosenSectionId() },
+					click: $root.goToSection"></li>
+			</ul>
 		</div>
-		<form data-bind="with: mustLogin">
+		<div class="content">
+		<form data-bind="visible: mustLogin, with: mustLogin">
 			<p>
 			<label for="usernameField">Username: </label>
-			<input type="text" id="usernameField" data-bind="value: $root.username">
+			<input type="text" autocapitalize="off" id="usernameField" data-bind="value: $root.username">
 			<p>
 			<label for="passwordField">Password: </label>
 			<input type="password" id="passwordField" data-bind="value: $root.password">
 			<p>
 			<input type="submit" value="Login" data-bind="click: $root.login">
 		</form>
-		<ul class="sections" data-bind="foreach: sections">
-			<li data-bind="text: $data, 
-				css: { selected: $data == $root.chosenSectionId() },
-				click: $root.goToSection"></li>
-		</ul>
 		<p data-bind="text: error" class="errorText">
 		</p>
 		<div class="mystatus" data-bind="with: user">
@@ -42,7 +45,7 @@
 			<label for="remarksText">Notes: </label>
 			<textarea id="remarksText" rows="3" data-bind="value: Remarks"></textarea>
 			<p>
-			<button data-bind="click: $root.save">Save</button>
+			<input type="button" data-bind="click: save" value="Save"></input>
 		</form>
 		</div>
 		<div class="people" data-bind="visible: (chosenSectionId() == 'Everyone')">
@@ -68,7 +71,7 @@
 						<td data-bind="text: Name"></td> 
 						<td data-bind="text: StatusValue"></td>
 						<td class="desktop-only" data-bind="text: LastEditor"></td>
-						<td class="desktop-only" data-bind="text: LastEditTime().toLocaleDateString('en-ca', {hour: '2-digit', minute: '2-digit'})"></td>
+						<td class="desktop-only" data-bind="text: LastEditTime.formatted"></td>
 						<td data-bind="attr: {title: Remarks}, text: (Remarks().length > 50? Remarks().substring(0, 50) + '...':
 		  Remarks)"
 							></td>
@@ -82,17 +85,22 @@
 		<div class="person" data-bind="visible: chosenSectionId() === $root.sections()[2], with: selectedUser">
 			<h2 data-bind="text: Name"></h2>
 			<dl>
-				<dd>Department</dd>
-				<dt data-bind="text: Group"></dt>
-				<dd>Telehone</dd>
-				<dt data-bind="text: Telephone"></dt>
-				<dd>Mobile</dd>
-				<dt data-bind="text: Mobile"></dt>
-				<dd>Work Site</dd>
-				<dt data-bind="text: Office"></dt>
-				<dd>Last Edit Time</dd>
-				<dt data-bind="text: LastEditTime.formatted"></dt>
-			</dl
+				<dt>Department</dt>
+				<dd data-bind="text: Group"></dd>
+				<dt>Telehone</dt>
+				<dd data-bind="text: Telephone"></dd>
+				<dt>Mobile</dt>
+				<dd data-bind="text: Mobile"></dd>
+				<dt>Work Site</dt>
+				<dd data-bind="text: Office"></dd>
+				<dt>Notes</dt>
+				<dd data-bind="text: Remarks"></dd>
+				<dt>Modified By</dt>
+				<dd data-bind="text: LastEditor"></dd>
+				<dt>Last Modified</dt>
+				<dd data-bind="text: LastEditTime.formatted"></dd>
+			</dl>
+		</div>
 		</div>
 		<script data-main="inoutboard.built" type="text/javascript" src="require.js"></script><!--
 		<script type="text/javascript" src="require-config.js"></script>

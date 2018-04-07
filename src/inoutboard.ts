@@ -4,6 +4,8 @@ interface IHash<T> {
 	[key: string]: T
 }
 
+var dateFormat = new Intl.DateTimeFormat('en-US', {month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric'});
+
 class Person {
 	ID: number
 	Name: KnockoutObservable<string>
@@ -37,7 +39,7 @@ class Person {
 		this.LastEditor = ko.observable(null);
 		this.LastEditTime = ko.observable(null);
 		this.LastEditTime.formatted = ko.pureComputed(() => {
-			return this.LastEditTime().toLocaleDateString('en-ca', {hour: '2-digit', minute: '2-digit'});
+			return dateFormat.format(this.LastEditTime());
 		});
 		this.Group = ko.observable(null);
 		this.Telephone = ko.observable(null);
@@ -252,7 +254,9 @@ class InOutBoardViewModel {
 			xhr.onerror = () => {
 				this.user(null);
 				this.people(null);
-				this.mustLogin("true");
+				if (xhr.status === 401) {
+					this.mustLogin("true");
+				}
 			};
 				xhr.send();
 			}
