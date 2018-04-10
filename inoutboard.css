@@ -32,12 +32,6 @@ textarea {
 	width: 100%;
 	max-width: 500px;
 }
-tbody.group_header tr td {
-	border-left: none;
-	border-right: none;
-	border-top: none;
-	border-bottom: 2px solid black;
-}
 
 .sections {
 	background-color: #bbb;
@@ -78,42 +72,6 @@ tbody.group_header tr td {
        border-right-color: #aaa;
        border-left: none;
        box-shadow: inset 1px 2px 6px #070707;
-}
-
-.people table {
-	border-collapse: collapse;
-	width: 100%;
-	max-width: 600px;
-}
-
-.people td {
-	border-right: 1px solid #ccc;
-	white-space:pre;
-}
-
-.people td:last-child {
-	width: 100%;
-}
-
-.people td:first-child {
-	font-size: larger;
-	color: #00aa00;
-}
-
-.people textarea {
-	width: 100%;
-}
-
-.people tr {
-	border-top: 1px solid #ccc;
-}
-
-.people tr:nth-child(even) {
-	background: #ddd;
-}
-
-.people tr:nth-child(odd) {
-	background: #fff;
 }
 
 .errorText {
@@ -177,6 +135,83 @@ div.header {
 	margin: 0;
 	padding: 5px;
 	width: 300px;
-       /*! border-top: 1px solid #999; */
+       /*! order-top: 1px solid #999; */
+}
+
+table.people {
+	  border-collapse: collapse;
+	    width: 100%;
+	      max-width: 1200;
+}
+table.people th, table.people td {
+	  padding: .4em;
+}
+table.people > tbody.group_header > tr {
+	  border: none;
+}
+table.people > tbody.group_header > tr td, table.people > tbody.group_header > tr th {
+	  cursor: pointer;
+}
+table.people > tbody.group_header > tr td:first-child,
+table.people > tbody.group_header > tr th:first-child {
+	  position: relative;
+	    padding-left: 20px;
+}
+table.people > tbody.group_header > tr td:first-child:before,
+table.people > tbody.group_header > tr th:first-child:before {
+	  position: absolute;
+	    top: 50%;
+	      left: 5px;
+	        width: 9px;
+		  height: 16px;
+		    margin-top: -8px;
+		      font: 16px;
+		        color: #999;
+			  content: "\25b6";
+			    transition: all .3s ease;
+}
+table.people > tbody.group_header > tr:hover {
+	  background: #aaa;
+}
+table.people > tbody.group_header.open {
+	  background: #444;
+	    color: white;
+}
+table.people > tbody.group_header.open tr > td:first-child:before {
+	  transform: rotate(-180deg);
+	    color: #333;
+}
+table.people > tbody.fold {
+	  display: none;
+}
+table.people > tbody.fold.open {
+	  display: contents;
+}
+
+.fold-content >
+tr:nth-child(even) {
+	  background: #ccc;
+}
+
+.fold-content td {
+	  border-right: 1px solid #ccc;
+	    white-space: pre;
+}
+
+.people td:last-child {
+	  width: 100%;
+}
+
+.people td:first-child {
+	  font-size: larger;
+	    color: #00aa00;
+}
+
+.people textarea {
+	  width: 100%;
+}
+
+.people tr {
+	  border-top: 1px solid #ccc;
 }
 

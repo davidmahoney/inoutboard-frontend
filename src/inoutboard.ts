@@ -85,10 +85,16 @@ class Person {
 class PersonGroup {
 	label: KnockoutObservable<string>
 	people: KnockoutObservableArray<Person>
+	active: KnockoutObservable<Boolean>
 
 	constructor(label: string, people: Person[]) {
 		this.label = ko.observable(label)
 		this.people = ko.observableArray<Person>(people)
+		this.active = ko.observable<Boolean>(false);
+	}
+
+	toggleActive = () => {
+		this.active(!this.active());
 	}
 }
 
@@ -110,6 +116,7 @@ class InOutBoardViewModel {
 		this.error = ko.observable("");
 		this.chosenSectionId = ko.observable(null);
 		this.people = null;
+		this.username = null;
 		this.user = ko.observable(null);
 		this.people = ko.observableArray<PersonGroup>(null);
 		this.statuses = ko.observableArray(["In", "In Field", "Out"]);
@@ -180,6 +187,7 @@ class InOutBoardViewModel {
 						console.log(v);
 						this.error(v);
 					});
+					this.username = user.Username;
 				}
 			};
 			xhr.onerror = (err) => {
@@ -213,9 +221,11 @@ class InOutBoardViewModel {
 			xhr.onload = (ev) => {
 				if (xhr.status < 200 || xhr.status >= 300) {
 					console.log("Ruh-roh!");
+					this.error("Could not get data from the server: Error " + xhr.status);
 				} else if (xhr.status !== 401){
 					this.mustLogin(null);
 					let people = JSON.parse(xhr.response);
+					let myDepartment = "";
 					let mapped: IHash<Person[]> = {};
 					for (let jsperson of people) {
 						let person = new Person();
@@ -243,9 +253,15 @@ class InOutBoardViewModel {
 							mapped[jsperson.Department] = new Array<Person>();
 						}
 						mapped[jsperson.Department].push(person);
+						if (this.username === jsperson.Username) {
+							myDepartment = jsperson.Department;
+						}
 					}
 					Object.keys(mapped).forEach((k) => {
 						let group = new PersonGroup(k, mapped[k]);
+						if (k === myDepartment) {
+							group.active(true);
+						}
 						this.people.push(group);
 					});
 			} else { this.login(); }

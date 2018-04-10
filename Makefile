@@ -8,7 +8,7 @@ all: build
 
 build: built/inoutboard.js $(LIBS) $(FILES) $(SRC)
 
-$(SRC):
+$(SRC): src/*.ts
 	mkdir -p built/src
 	cp src/*.ts built/src
 
