@@ -5,6 +5,7 @@ interface IHash<T> {
 }
 
 var dateFormat = new Intl.DateTimeFormat('en-US', {month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric'});
+var formatPhone = (n: string) => { return n.replace(' ', '').replace('(', '').replace('(',''); }
 
 class Person {
 	ID: number
@@ -43,7 +44,13 @@ class Person {
 		});
 		this.Group = ko.observable(null);
 		this.Telephone = ko.observable(null);
+		this.Telephone.Url = ko.pureComputed(() => {
+			return formatPhone(this.Telephone() || "");
+		});
 		this.Mobile = ko.observable(null);
+		this.Mobile.Url = ko.pureComputed(() => {
+			return formatPhone(this.Mobile() || "");
+		});
 		this.Office = ko.observable(null);
 	}
 	save = () => {
@@ -118,7 +125,7 @@ class InOutBoardViewModel {
 		this.people = null;
 		this.username = null;
 		this.user = ko.observable(null);
-		this.people = ko.observableArray<PersonGroup>(null);
+		this.people = ko.observableArray<PersonGroup>(new Array<PersonGroup>());
 		this.statuses = ko.observableArray(["In", "In Field", "Out"]);
 		this.mustLogin = ko.observable(null);
 		this.username = ko.observable("");
@@ -126,6 +133,7 @@ class InOutBoardViewModel {
 		this.sections = ko.observableArray(["Me", "Everyone"])
 		this.selectedUser = ko.observable(null);
 		this.goToSection("Me");
+		this.people.extend({ deferred: true });
 	}
 
 	login = () => {
@@ -157,7 +165,6 @@ class InOutBoardViewModel {
 			if (this.refreshId > 0) {
 				clearInterval(this.refreshId);
 			}
-			this.people(null);
 			let xhr = new XMLHttpRequest();
 			xhr.open("GET", "/api/user/");
 			xhr.onload = (ev) => {
@@ -214,7 +221,10 @@ class InOutBoardViewModel {
 			this.user(null);
 
 			let getPeople = () => {
+			if (this.people() === null)
+			{
 				this.people(new Array<PersonGroup>());
+			}
 			let xhr = new XMLHttpRequest();
 			xhr.open("GET", "/api/people/");
 			xhr.withCredentials = true;
@@ -257,12 +267,21 @@ class InOutBoardViewModel {
 							myDepartment = jsperson.Department;
 						}
 					}
+
 					Object.keys(mapped).forEach((k) => {
-						let group = new PersonGroup(k, mapped[k]);
-						if (k === myDepartment) {
-							group.active(true);
+						let group = ko.utils.arrayFirst(this.people(), function(g) {
+							return g.label() === k;
+						});
+						if (group === null) {
+							group = new PersonGroup(k, mapped[k]);
+							if (k === myDepartment) {
+								group.active(true);
+							}
+							this.people.push(group);
+						} else {
+							group.people.removeAll();
+							group.people(mapped[k]);
 						}
-						this.people.push(group);
 					});
 			} else { this.login(); }
 
