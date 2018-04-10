@@ -88,9 +88,9 @@
 				<dt>Department</dt>
 				<dd data-bind="text: Group"></dd>
 				<dt>Telehone</dt>
-				<dd data-bind="text: Telephone"></dd>
+				<dd><a data-bind="attr: {'href': 'tel:' + Telephone()}, text: Telephone"></a></dd>
 				<dt>Mobile</dt>
-				<dd data-bind="text: Mobile"></dd>
+				<dd><a data-bind="attr: {'href': 'tel:' +   Mobile()}, text: Mobile"></a></dd>
 				<dt>Work Site</dt>
 				<dd data-bind="text: Office"></dd>
 				<dt>Notes</dt>
