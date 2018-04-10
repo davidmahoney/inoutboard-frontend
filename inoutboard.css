@@ -145,12 +145,14 @@ table.people {
 }
 table.people th, table.people td {
 	  padding: .4em;
+	  white-space: nowrap;
 }
 table.people > tbody.group_header > tr {
 	  border: none;
 }
 table.people > tbody.group_header > tr td, table.people > tbody.group_header > tr th {
 	  cursor: pointer;
+	  white-space: unset;
 }
 table.people > tbody.group_header > tr td:first-child,
 table.people > tbody.group_header > tr th:first-child {
@@ -159,16 +161,16 @@ table.people > tbody.group_header > tr th:first-child {
 }
 table.people > tbody.group_header > tr td:first-child:before,
 table.people > tbody.group_header > tr th:first-child:before {
-	  position: absolute;
-	    top: 50%;
-	      left: 5px;
-	        width: 9px;
-		  height: 16px;
-		    margin-top: -8px;
-		      font: 16px;
-		        color: #999;
-			  content: "\25b6";
-			    transition: all .3s ease;
+	position: absolute;
+	top: 50%;
+	left: 5px;
+	width: 9px;
+	height: 16px;
+	margin-top: -8px;
+	font: 16px;
+	color: #999;
+	content: "\25b6";
+	transition: all .3s ease;
 }
 table.people > tbody.group_header > tr:hover {
 	  background: #aaa;
@@ -195,11 +197,11 @@ tr:nth-child(even) {
 
 .fold-content td {
 	  border-right: 1px solid #ccc;
-	    white-space: pre;
 }
 
 .people td:last-child {
 	  width: 100%;
+	  white-space: pre;
 }
 
 .people td:first-child {
@@ -207,7 +209,7 @@ tr:nth-child(even) {
 	    color: #00aa00;
 }
 
-.people textarea {
+Return time, regular schedule, notes.people textarea {
 	  width: 100%;
 }
 
