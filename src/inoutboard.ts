@@ -29,6 +29,8 @@ class Person {
 		this.Status = ko.observable(null);
 		this.StatusValue = ko.observable(null);
 		this.Remarks = ko.observable(null);
+		this.Remarks.placeholder = ko.pureComputed(() => { 
+			return  "Return time, regular schedule, availability"; });
 		this.StatusValue.subscribe((nv) => {
 			switch (nv) {
 			case "In": this.Status(0); break;

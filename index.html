@@ -43,7 +43,7 @@
 			</select>
 			<p>
 			<label for="remarksText">Notes: </label>
-			<textarea id="remarksText" rows="3" data-bind="value: Remarks"></textarea>
+			<textarea id="remarksText" rows="3" data-bind="value: Remarks, attr: {placeholder: Remarks.placeholder}"></textarea>
 			<p>
 			<input type="button" data-bind="click: save" value="Save"></input>
 		</form>
@@ -62,7 +62,7 @@
 						<td style="cursor: pointer;" data-bind="click: save">&#x2714;</td>
 						<td data-bind="text: Name"></td> 
 						<td><select data-bind="options: $root.statuses, value: StatusValue"></select></td>
-						<td colspan="3"><textarea id="remarksField" rows="3" placeholder="Return time, regular schedule, notes" data-bind="value: Remarks" ></textarea></td>
+						<td colspan="3"><textarea id="remarksField" rows="3" data-bind="value: Remarks, attr: {placeholder: Remarks.placeholder}" ></textarea></td>
 						<td class="desktop-only"></td>
 						<td class="desktop-only"></td>
 						<!-- /ko -->
