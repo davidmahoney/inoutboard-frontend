@@ -196,7 +196,7 @@ class InOutBoardViewModel {
 						console.log(v);
 						this.error(v);
 					});
-					this.username = user.Username;
+					this.username(user.Username);
 				}
 			};
 			xhr.onerror = (err) => {
@@ -265,7 +265,7 @@ class InOutBoardViewModel {
 							mapped[jsperson.Department] = new Array<Person>();
 						}
 						mapped[jsperson.Department].push(person);
-						if (this.username === jsperson.Username) {
+						if (this.username() === jsperson.Username) {
 							myDepartment = jsperson.Department;
 						}
 					}
