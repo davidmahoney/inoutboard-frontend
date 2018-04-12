@@ -102,7 +102,22 @@
 			</dl>
 		</div>
 		</div>
-		<script data-main="inoutboard.built" type="text/javascript" src="require.js"></script><!--
+		<script data-main="inoutboard.built" type="text/javascript" src="require.js"></script>
+		<script>
+			window.onscroll = function() {
+				var sections = document.getElementsByClassName("sections")[0];
+				var scroll = 
+				    window.scrollY //Modern Way (Chrome, Firefox)
+				     || window.pageYOffset; // IE
+				if (scroll >= 100) {
+					sections.classList.add("fixed-header");
+				} else {
+					sections.classList.remove("fixed-header");
+				}
+			};
+		</script>
+		<!--
+		
 		<script type="text/javascript" src="require-config.js"></script>
 		<script>
 			require(["inoutboard"]);

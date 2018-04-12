@@ -17,7 +17,7 @@ body {
 }
 
 div.content {
-	margin: 150px 0 0 0;
+	margin: 0;
 }
 
 @media screen and (max-width: 480px) {
@@ -37,8 +37,15 @@ textarea {
 	background-color: #bbb;
 	padding: 0;
 	margin: 0;
+	top: 0;
 	list-style-type: none;
+	z-index: 10;
 }
+
+.fixed-header {
+	position: fixed;
+	width: 100%;
+} 
 
 .sections li {
 	font-size: 16px;
@@ -82,17 +89,14 @@ div.header {
 	background-image: url(bg-topbar.png);
 	background-repeat: no-repeat;
 	background-size: cover;
-	min-height: 100px;
-	position: fixed;
 	width: 100%;
 	top: 0px;
 }
 
 .header > div {
 	align-items: center;
-	justify-content: left;
-	margin: 4px;
 	display: flex;
+	padding: 8px;
 }
 
 .header h1 {
@@ -100,6 +104,10 @@ div.header {
 	height: 100%;
 	width: 100%;
 	color: #222244;
+}
+.header img {
+	margin: 8px 0 0 8px;
+
 }
 
 .mystatus {
@@ -150,6 +158,11 @@ table.people th, table.people td {
 table.people > tbody.group_header > tr {
 	  border: none;
 }
+
+table.people > tbody.group_header {
+	background: #ccc;
+}
+
 table.people > tbody.group_header > tr td, table.people > tbody.group_header > tr th {
 	  cursor: pointer;
 	  white-space: unset;
