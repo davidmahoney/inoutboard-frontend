@@ -20,6 +20,7 @@ class Person {
 	Telephone: KnockoutObservable<string>
 	Mobile: KnockoutObservable<string>
 	Office: KnockoutObservable<string>
+	Title: KnockoutObservable<string>
 	Group: KnockoutObservable<string>
 	error: KnockoutObservable<string>
 
@@ -54,6 +55,7 @@ class Person {
 			return formatPhone(this.Mobile() || "");
 		});
 		this.Office = ko.observable(null);
+		this.Title = ko.observable(null);
 	}
 	save = () => {
 		let xhr = new XMLHttpRequest();
@@ -192,6 +194,7 @@ class InOutBoardViewModel {
 					this.user().Telephone(user.Telephone);
 					this.user().Mobile(user.Mobile);
 					this.user().Office(user.Office);
+					this.user().Title(user.Title);
 					this.user().error.subscribe((v) => {
 						console.log(v);
 						this.error(v);
@@ -254,6 +257,7 @@ class InOutBoardViewModel {
 						person.Telephone(jsperson.Telephone);
 						person.Mobile(jsperson.Mobile);
 						person.Office(jsperson.Office);
+						person.Title(jsperson.Title);
 						person.IsEditing.subscribe((ed) => {
 							if (ed) {
 								clearInterval(this.refreshId);
