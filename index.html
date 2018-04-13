@@ -9,10 +9,10 @@
 	</head>
 	<body>
 		<div class="header">
-			<div>
-			<img src="logo.png"/>
+			<img alt="logo" src="logo.png"/>
 			<h1>In/Out Board</h1>
-			</div>
+		</div>
+		<div class="sections">
 			<ul class="sections" data-bind="visible: !mustLogin(), foreach: sections">
 				<li data-bind="text: $data, 
 					css: { selected: $data == $root.chosenSectionId() },
@@ -104,17 +104,19 @@
 		</div>
 		<script data-main="inoutboard.built" type="text/javascript" src="require.js"></script>
 		<script>
-			window.onscroll = function() {
-				var sections = document.getElementsByClassName("sections")[0];
-				var scroll = 
-				    window.scrollY //Modern Way (Chrome, Firefox)
-				     || window.pageYOffset; // IE
-				if (scroll >= 100) {
-					sections.classList.add("fixed-header");
-				} else {
-					sections.classList.remove("fixed-header");
-				}
-			};
+			if (typeof(CSS) == "undefined" || !CSS.supports('position', 'sticky')) {
+				window.onscroll = function() {
+					var sections = document.getElementsByClassName("sections")[0];
+					var scroll = 
+						window.scrollY //Modern Way (Chrome, Firefox)
+						|| window.pageYOffset; // IE
+					if (scroll >= 100) {
+						sections.classList.add("fixed-header");
+					} else {
+						sections.classList.remove("fixed-header");
+					}
+				};
+			}
 		</script>
 		<!--
 		
