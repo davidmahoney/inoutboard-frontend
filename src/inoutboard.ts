@@ -24,6 +24,7 @@ class Person {
 	Group: KnockoutObservable<string>
 	error: KnockoutObservable<string>
 	loading: KnockoutObservable<Boolean>
+	saveSuccess: KnockoutObservable<Boolean>
 
 	constructor() {
 		this.error = ko.observable(null);
@@ -58,6 +59,13 @@ class Person {
 		});
 		this.Office = ko.observable(null);
 		this.Title = ko.observable(null);
+		this.saveSuccess = ko.observable(null);
+		this.saveSuccess.subscribe(() => {
+			// kinda hacky, but remove the success
+			// setting so that the animation in the 
+			// view doesn't reoccur
+			setTimeout(() => { this.saveSuccess(null);}, 2000);
+		});
 	}
 	save = () => {
 		let xhr = new XMLHttpRequest();
@@ -65,6 +73,7 @@ class Person {
 		xhr.onerror = (ev) => {
 			this.loading(false);
 			console.log("Save failed");
+			this.saveSuccess(false);
 			if (xhr.status == 401) {
 				this.error("Error: unauthorized");
 			}
@@ -84,14 +93,18 @@ class Person {
 
 		xhr.onload = () => {
 			this.loading(false);
-			this.IsEditing(false);
 			if (xhr.status >= 400) {
 				this.error("Error: " + xhr.status + " - " + xhr.statusText);
+				this.saveSuccess(false);
+			} else {
+				this.IsEditing(false);
+				let jsperson = JSON.parse(xhr.response);
+				this.LastEditor(jsperson.LastEditor);
+				this.LastEditTime(new Date(jsperson.LastEditTime));
+				this.saveSuccess(true);
 			}
-			let jsperson = JSON.parse(xhr.response);
-			this.LastEditor(jsperson.LastEditor);
-			this.LastEditTime(new Date(jsperson.LastEditTime));
 		}
+		this.saveSuccess(null);
 		this.loading(true);
 		xhr.send(payload);
 	}
@@ -158,8 +171,12 @@ class InOutBoardViewModel {
 		}
 		xhr.onload = () => {
 			this.password(null);
-			this.mustLogin(null);
-			this.goToSection("Me");
+			if (xhr.status >= 400) {
+				this.error("Login failed");
+			} else {
+				this.mustLogin(null);
+				this.goToSection("Me");
+			}
 		}
 		let content = JSON.stringify({Username: this.username(), Password: this.password()});
 		xhr.send(content);
@@ -167,15 +184,20 @@ class InOutBoardViewModel {
 
 	goToSection = (section: string) => {
 		this.error("");
+		// stop refreshing the everyone tab
+		if (this.refreshId > 0) {
+			clearInterval(this.refreshId);
+		}
+
+		// if there is a details tab and we aren't looking at it,
+		// get rid of it
 		if ((section === "Me" || section === "Everyone") && this.sections().length > 2) {
 			this.selectedUser(null);
 			this.sections.pop();
 		}
 
+		// the "me" tab
 		if (section == "Me") {
-			if (this.refreshId > 0) {
-				clearInterval(this.refreshId);
-			}
 			let xhr = new XMLHttpRequest();
 			xhr.open("GET", "/api/user/");
 			xhr.onload = (ev) => {
@@ -233,7 +255,7 @@ class InOutBoardViewModel {
 			this.user(new Person());
 			this.chosenSectionId(section);
 
-		} else if (section === "Everyone") {
+		} else if (section === "Everyone") { // the "everyone" tab
 			this.user(null);
 
 			let getPeople = () => {
@@ -326,6 +348,7 @@ class InOutBoardViewModel {
 	}
 
 	editPerson = (person: Person) => {
+		person.saveSuccess(null);
 		person.IsEditing(true);
 	}
 

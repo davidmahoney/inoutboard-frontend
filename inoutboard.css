@@ -21,7 +21,7 @@ div.content {
 }
 
 @media screen and (max-width: 480px) {
-input[type=button] {
+input[type=button] input[type=submit] {
 	background: #bbb;
 	border: 1px solid #999;
 	padding: 8px;
@@ -251,4 +251,21 @@ Return time, regular schedule, notes.people textarea {
 	100% {
 		transform: rotate(360deg);
 	}
+}
+
+.saved {
+	animation: flashgreen 1s ease-in-out;
+}
+
+.badSave {
+	animation: flashred 1s ease-in-out;
+}
+
+@keyframes flashgreen {
+	from { background: green; }
+	to { background: inherit; }
+}
+
+@keyframes flashred {
+
 }

@@ -34,7 +34,7 @@
 		</form>
 		<p data-bind="text: error" class="errorText">
 		</p>
-		<div style="display: none;" class="mystatus" data-bind="visible: user() != null, with: user">
+		<div style="display: none;" class="mystatus" data-bind="visible: user() !== null, with: user, css: { saved: user() !== null && user().saveSuccess(), baseSave: user() !== null && user().saveSuccess() === false}">
 			<form>
 			I am...
 			<p data-bind="text: Name"></p>
@@ -59,7 +59,7 @@
 					<tr><td></td><td data-bind="text: label"></td><td></td><td></td><td></td><td></td></tr>
 				</tbody>
 				<tbody class="fold" data-bind="foreach: people, css: {'open': active}">
-					<tr data-bind="click: $root.viewPerson">
+					<tr data-bind="click: $root.viewPerson, css: { saved: saveSuccess(), badSave: saveSuccess() === false}">
 						<!-- ko if: IsEditing -->
 						<td style="cursor: pointer;" data-bind="click: save">&#x2714;</td>
 						<td data-bind="text: Name"></td> 
