@@ -21,7 +21,7 @@ div.content {
 }
 
 @media screen and (max-width: 480px) {
-input[type=button] {
+input[type=button] input[type=submit] {
 	background: #bbb;
 	border: 1px solid #999;
 	padding: 8px;
@@ -125,7 +125,6 @@ div.header {
 }
 
 .person dl {
-	float: left;
 	margin: 1em;
 	margin: 0;
 	padding 5;
@@ -154,7 +153,7 @@ div.header {
 table.people {
 	  border-collapse: collapse;
 	    width: 100%;
-	      max-width: 1200;
+	    max-width: 1200;
 }
 table.people th, table.people td {
 	  padding: .4em;
@@ -208,27 +207,21 @@ table.people > tbody.fold.open {
 	  display: table-row-group;
 }
 
-.fold-content >
-tr:nth-child(even) {
+.fold tr:nth-child(even) {
 	  background: #ccc;
+}
+
+table.people th:nth-child(4) {
+	width: 99%;
 }
 
 .fold-content td {
 	  border-right: 1px solid #ccc;
 }
 
-.people td:last-child {
-	  width: 100%;
-	  white-space: pre;
-}
-
 .people td:first-child {
 	  font-size: larger;
 	    color: #00aa00;
-}
-
-Return time, regular schedule, notes.people textarea {
-	  width: 100%;
 }
 
 .people tr {
@@ -251,4 +244,21 @@ Return time, regular schedule, notes.people textarea {
 	100% {
 		transform: rotate(360deg);
 	}
+}
+
+.saved {
+	animation: flashgreen 1s ease-in-out;
+}
+
+.badSave {
+	animation: flashred 1s ease-in-out;
+}
+
+@keyframes flashgreen {
+	from { background: green; }
+	to { background: inherit; }
+}
+
+@keyframes flashred {
+
 }

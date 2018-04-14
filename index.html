@@ -34,7 +34,7 @@
 		</form>
 		<p data-bind="text: error" class="errorText">
 		</p>
-		<div style="display: none;" class="mystatus" data-bind="visible: user() != null, with: user">
+		<div style="display: none;" class="mystatus" data-bind="visible: user() !== null, with: user, css: { saved: user() !== null && user().saveSuccess(), baseSave: user() !== null && user().saveSuccess() === false}">
 			<form>
 			I am...
 			<p data-bind="text: Name"></p>
@@ -53,13 +53,20 @@
 		<div style="display:none;" class="people" data-bind="visible: (chosenSectionId() == 'Everyone')">
 			<form>
 				<table class="people">
-					<thead><tr><th></th><th>Name</th><th>Status</th><th class="desktop-only">Modified By</th><th class="desktop-only">Modified</th><th>Notes</th></tr></thead>
+					<thead><tr>
+						<th></th>
+						<th>Name</th>
+						<th>Status</th>
+						<th>Notes</th>
+						<th class="desktop-only">Modified By</th>
+						<th class="desktop-only">Modified</th>
+					</tr></thead>
 				<!-- ko foreach: $root.people -->
 				<tbody class="group_header" data-bind="click: toggleActive, css: {'open': active}">
 					<tr><td></td><td data-bind="text: label"></td><td></td><td></td><td></td><td></td></tr>
 				</tbody>
 				<tbody class="fold" data-bind="foreach: people, css: {'open': active}">
-					<tr data-bind="click: $root.viewPerson">
+					<tr data-bind="click: $root.viewPerson, css: { saved: saveSuccess(), badSave: saveSuccess() === false}">
 						<!-- ko if: IsEditing -->
 						<td style="cursor: pointer;" data-bind="click: save">&#x2714;</td>
 						<td data-bind="text: Name"></td> 
@@ -72,11 +79,9 @@
 						<td style="cursor: pointer;" data-bind="click: $root.editPerson, clickBubble: false">&#x270e;</td>
 						<td data-bind="text: Name"></td> 
 						<td data-bind="text: StatusValue"></td>
+						<td data-bind="attr: {title: Remarks}, text: (Remarks().length > 50? Remarks().substring(0, 50) + '...': Remarks)" ></td>
 						<td class="desktop-only" data-bind="text: LastEditor"></td>
 						<td class="desktop-only" data-bind="text: LastEditTime.formatted"></td>
-						<td data-bind="attr: {title: Remarks}, text: (Remarks().length > 50? Remarks().substring(0, 50) + '...':
-		  Remarks)"
-							></td>
 						<!-- /ko -->
 					</tr>
 				</tbody>
