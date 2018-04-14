@@ -23,9 +23,11 @@ class Person {
 	Title: KnockoutObservable<string>
 	Group: KnockoutObservable<string>
 	error: KnockoutObservable<string>
+	loading: KnockoutObservable<Boolean>
 
 	constructor() {
 		this.error = ko.observable(null);
+		this.loading = ko.observable(false);
 		this.Name = ko.observable(null);
 		this.Status = ko.observable(null);
 		this.StatusValue = ko.observable(null);
@@ -61,6 +63,7 @@ class Person {
 		let xhr = new XMLHttpRequest();
 		xhr.open("PUT", "/api/user/" + this.Username);
 		xhr.onerror = (ev) => {
+			this.loading(false);
 			console.log("Save failed");
 			if (xhr.status == 401) {
 				this.error("Error: unauthorized");
@@ -80,6 +83,7 @@ class Person {
 			});
 
 		xhr.onload = () => {
+			this.loading(false);
 			this.IsEditing(false);
 			if (xhr.status >= 400) {
 				this.error("Error: " + xhr.status + " - " + xhr.statusText);
@@ -88,6 +92,7 @@ class Person {
 			this.LastEditor(jsperson.LastEditor);
 			this.LastEditTime(new Date(jsperson.LastEditTime));
 		}
+		this.loading(true);
 		xhr.send(payload);
 	}
 
@@ -120,10 +125,12 @@ class InOutBoardViewModel {
 	password: KnockoutObservable<string>
 	error: KnockoutObservable<string>
 	selectedUser: KnockoutObservable<Person>
+	loading: KnockoutObservable<Boolean>
 	refreshId: number
 
 
 	constructor() {
+		this.loading = ko.observable(false);
 		this.error = ko.observable("");
 		this.chosenSectionId = ko.observable(null);
 		this.people = null;
@@ -199,10 +206,13 @@ class InOutBoardViewModel {
 						console.log(v);
 						this.error(v);
 					});
+					this.user().loading.subscribe(this.loading);
 					this.username(user.Username);
 				}
+				this.loading(false);
 			};
 			xhr.onerror = (err) => {
+				this.loading(false);
 				if (xhr.status === 401) {
 					this.mustLogin("true");
 					this.user(null);
@@ -217,6 +227,7 @@ class InOutBoardViewModel {
 					}
 				}
 			};
+			this.loading(true);
 			xhr.send();
 			
 			this.user(new Person());
@@ -265,6 +276,8 @@ class InOutBoardViewModel {
 								this.refreshId = setInterval(getPeople, 300000); // five minutes
 							}
 						});
+						person.error.subscribe(this.error);
+						person.loading.subscribe(this.loading);
 						if (mapped[jsperson.Department] === undefined) {
 							mapped[jsperson.Department] = new Array<Person>();
 						}
@@ -289,6 +302,7 @@ class InOutBoardViewModel {
 							group.people(mapped[k]);
 						}
 					});
+					this.loading(false);
 			} else { this.login(); }
 
 			};
@@ -298,7 +312,9 @@ class InOutBoardViewModel {
 				if (xhr.status === 401) {
 					this.mustLogin("true");
 				}
+				this.loading(false);
 			};
+				this.loading(true);
 				xhr.send();
 			}
 			this.refreshId = setInterval(getPeople, 300000); // five minutes

@@ -1,6 +1,6 @@
 TSC=tsc
 LIBS=built/knockout-latest.js built/require.js
-FILES=built/index.html built/inoutboard.css
+FILES=built/index.html built/inoutboard.css built/loading.svg
 SRC=built/src/inoutboard.ts built/src/require-config.ts
 RJS=node_modules/requirejs/bin/r.js
 
@@ -16,9 +16,8 @@ $(LIBS): node_modules/knockout/build/output/knockout-latest.js node_modules/requ
 	cp node_modules/knockout/build/output/knockout-latest.js built
 	cp node_modules/requirejs/require.js built
 	
-$(FILES): index.html inoutboard.css
-	cp index.html built
-	cp inoutboard.css built
+$(FILES): $(notdir $(FILES))
+	cp $(notdir $(FILES)) built
 
 built/inoutboard.js: src/inoutboard.ts
 	$(TSC)
@@ -27,7 +26,7 @@ built/inoutboard.js: src/inoutboard.ts
 static: $(LIBS) $(FILES)
 
 clean:
-	-rm built/*.css built/inoutboard.js built/*.html
+	-rm $(FILES) $(LIBS) $(SRC) built/inoutboard.js built/inoutboard.built.js
 
 bundle: built/inoutboard.js $(LIBS)
 	$(RJS) -o tools/build.js baseUrl=built mainConfigFile=../built/require-config.js out=built/inoutboard.built.js

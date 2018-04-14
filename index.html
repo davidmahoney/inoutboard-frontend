@@ -20,7 +20,9 @@
 			</ul>
 		</div>
 		<div class="content">
-		<form data-bind="visible: mustLogin">
+			<div class="loading" data-bind="visible: loading">
+			</div>
+		<form style="display: none;" data-bind="visible: mustLogin">
 			<p>
 			<label for="usernameField">Username: </label>
 			<input type="text" autocapitalize="off" id="usernameField" data-bind="value: $root.username">
@@ -32,7 +34,7 @@
 		</form>
 		<p data-bind="text: error" class="errorText">
 		</p>
-		<div class="mystatus" data-bind="with: user">
+		<div style="display: none;" class="mystatus" data-bind="visible: user() != null, with: user">
 			<form>
 			I am...
 			<p data-bind="text: Name"></p>
@@ -48,7 +50,7 @@
 			<input type="button" data-bind="click: save" value="Save"></input>
 		</form>
 		</div>
-		<div class="people" data-bind="visible: (chosenSectionId() == 'Everyone')">
+		<div style="display:none;" class="people" data-bind="visible: (chosenSectionId() == 'Everyone')">
 			<form>
 				<table class="people">
 					<thead><tr><th></th><th>Name</th><th>Status</th><th class="desktop-only">Modified By</th><th class="desktop-only">Modified</th><th>Notes</th></tr></thead>
@@ -82,7 +84,7 @@
 			</table>
 			</form>
 		</div>
-		<div class="person" data-bind="visible: chosenSectionId() === $root.sections()[2], with: selectedUser">
+		<div style="display: none;" class="person" data-bind="visible: chosenSectionId() === $root.sections()[2], with: selectedUser">
 			<h2 data-bind="text: Name"></h2>
 			<dl>
 				<dt>Title<//dt>
