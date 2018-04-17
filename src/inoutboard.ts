@@ -40,13 +40,6 @@ class Person {
 		this.Remarks = ko.observable(null);
 		this.Remarks.placeholder = ko.pureComputed(() => { 
 			return  "Return time, regular schedule, availability"; });
-		this.StatusValue.subscribe((nv) => {
-			switch (nv) {
-			case "In": this.Status(0); break;
-			case "Out": this.Status(1); break;
-			case "In Field": this.Status(2); break;
-			}
-		});
 		this.IsEditing = ko.observable(false);
 		this.LastEditor = ko.observable(null);
 		this.LastEditTime = ko.observable(null);
@@ -97,14 +90,15 @@ class Person {
 			Remarks: this.Remarks()
 			});
 
-		xhr.onload = () => {
+		xhr.onload = (ev) => {
 			this.loading(false);
-			if (xhr.status >= 400) {
-				this.error("Error: " + xhr.status + " - " + xhr.statusText);
+			let req = <XMLHttpRequest>ev.target;
+			if (req.status >= 400) {
+				this.error("Error: " + req.status + " - " + req.statusText);
 				this.saveSuccess(false);
 			} else {
 				this.IsEditing(false);
-				let jsperson = JSON.parse(xhr.response);
+				let jsperson = JSON.parse(req.response);
 				this.LastEditor(jsperson.LastEditor);
 				this.LastEditTime(new Date(jsperson.LastEditTime));
 				this.saveSuccess(true);
@@ -223,9 +217,9 @@ class InOutBoardViewModel {
 					this.user().Status(user.Status.Code);
 					this.user().StatusValue(user.Status.Value);
 					this.user().Remarks(user.Remarks);
-					this.user().StatusValue.subscribe(this.user().save);
+					//this.user().StatusValue.subscribe(this.user().save);
 					this.user().LastEditTime(user.LastEditTime);
-					this.user().Remarks.subscribe(this.user().save);
+					//this.user().Remarks.subscribe(this.user().save);
 					this.user().Group(user.Department);
 					this.user().Telephone(user.Telephone);
 					this.user().Mobile(user.Mobile);
