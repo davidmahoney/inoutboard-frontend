@@ -18,6 +18,7 @@
   "homepage": "https://github.com/davidmahoney/inoutboard-frontend#readme",
   "dependencies": {
     "@types/knockout": "^3.4.40",
+    "es6-promise": "^4.2.4",
     "knockout": "^3.4.2",
     "requirejs": "^2.3.3"
   },

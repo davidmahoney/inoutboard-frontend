@@ -1,5 +1,5 @@
 TSC=tsc
-LIBS=built/knockout-latest.js built/require.js
+LIBS=built/knockout-latest.js built/require.js built/es6-promise.js
 FILES=built/index.html built/inoutboard.css built/loading.svg
 SRC=built/src/inoutboard.ts built/src/require-config.ts
 RJS=node_modules/requirejs/bin/r.js
@@ -12,14 +12,15 @@ $(SRC): src/*.ts
 	mkdir -p built/src
 	cp src/*.ts built/src
 
-$(LIBS): node_modules/knockout/build/output/knockout-latest.js node_modules/requirejs/require.js
-	cp node_modules/knockout/build/output/knockout-latest.js built
-	cp node_modules/requirejs/require.js built
+$(LIBS): node_modules/knockout/build/output/knockout-latest.js node_modules/requirejs/require.js node_modules/es6-promise/dist/es6-promise.auto.js
+	cp $^ built
+#cp node_modules/knockout/build/output/knockout-latest.js built
+#cp node_modules/requirejs/require.js built
 	
 $(FILES): $(notdir $(FILES))
 	cp $(notdir $(FILES)) built
 
-built/inoutboard.js: src/inoutboard.ts
+built/inoutboard.js: src/inoutboard.ts src/require-config.ts
 	$(TSC)
 	cp built/require-config.js built/inoutboard.built.js
 

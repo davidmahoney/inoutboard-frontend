@@ -6,4 +6,5 @@ require.config({
 	}
 });
 
+require(["es6-promise.auto"])
 require(["inoutboard"]);
