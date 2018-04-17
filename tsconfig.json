@@ -4,6 +4,12 @@
 		"sourceMap": true,
 		"noImplicitAny": true,
 		"module": "amd",
+		"lib": [
+			"ES5",
+			"ES2015",
+			"DOM",
+			"ScriptHost"
+		],
 		"target": "es5"
 	},
 	"files": [

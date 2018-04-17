@@ -40,8 +40,10 @@
 			<p data-bind="text: Name"></p>
 			<label for="statusField">I am</label>
 			<select id="statusField" data-bind="options: $root.statuses,
-												value: StatusValue
-												event: {blur: save}">
+									optionsText: 'Value',
+									optionsValue: 'Code',
+									value: Status,
+									event: {blur: save}">
 			</select>
 			<p>
 			<label for="remarksText">Notes: </label>
@@ -70,12 +72,15 @@
 						<!-- ko if: IsEditing -->
 						<td style="cursor: pointer;" data-bind="click: save">&#x2714;</td>
 						<td data-bind="text: Name"></td> 
-						<td><select data-bind="options: $root.statuses, value: StatusValue"></select></td>
+						<td><select data-bind="options: $root.statuses, 
+							optionsText: 'Value',
+							optionsValue: 'Code',
+							value: Status"></select></td>
 						<td colspan="3"><textarea id="remarksField" rows="3" data-bind="value: Remarks, attr: {placeholder: Remarks.placeholder}" ></textarea></td>
 						<!-- /ko -->
 						<!-- ko ifnot: IsEditing -->
-						<td style="cursor: pointer;" data-bind="click: $root.editPerson, clickBubble: false">&#x270e;</td>
-						<td data-bind="text: Name"></td> 
+						<td data-bind="click: $root.editPerson, clickBubble: false">&#x270e;</td>
+						<td><a data-bind="attr: {href: Name}, text: Name"></a></td> 
 						<td data-bind="text: StatusValue"></td>
 						<td data-bind="attr: {title: Remarks}, text: (Remarks().length > 50? Remarks().substring(0, 50) + '...': Remarks)" ></td>
 						<td class="desktop-only" data-bind="text: LastEditor"></td>

@@ -4,6 +4,11 @@ interface IHash<T> {
 	[key: string]: T
 }
 
+class StatusCode {
+	Code: number
+	Value: string
+}
+
 var dateFormat = new Intl.DateTimeFormat('en-US', {month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric'});
 var formatPhone = (n: string) => { return n.replace(' ', '').replace('(', '').replace('(',''); }
 
@@ -82,12 +87,13 @@ class Person {
 			}
 			};
 			
+		let sc = new StatusCode();
+		sc.Code = this.Status();
 		let payload = JSON.stringify({
 			ID: this.ID, 
 			Name: this.Name,
 			Username: this.Username, 
-			Status: this.Status(),
-			StatusValue: this.StatusValue(),	
+			Status: sc,
 			Remarks: this.Remarks()
 			});
 
@@ -132,13 +138,13 @@ class InOutBoardViewModel {
 	people: KnockoutObservableArray<PersonGroup>
 	user: KnockoutObservable<Person>
 	chosenSectionId: KnockoutObservable<string>
-	statuses: KnockoutObservableArray<string>
 	mustLogin: KnockoutObservable<string>
 	username: KnockoutObservable<string>
 	password: KnockoutObservable<string>
 	error: KnockoutObservable<string>
 	selectedUser: KnockoutObservable<Person>
 	loading: KnockoutObservable<Boolean>
+	statuses: KnockoutObservableArray<StatusCode>
 	refreshId: number
 
 
@@ -150,12 +156,12 @@ class InOutBoardViewModel {
 		this.username = null;
 		this.user = ko.observable(null);
 		this.people = ko.observableArray<PersonGroup>(new Array<PersonGroup>());
-		this.statuses = ko.observableArray(["In", "In Field", "Out"]);
 		this.mustLogin = ko.observable(null);
 		this.username = ko.observable("");
 		this.password = ko.observable("");
 		this.sections = ko.observableArray(["Me", "Everyone"])
 		this.selectedUser = ko.observable(null);
+		this.statuses = ko.observableArray<StatusCode>(new Array<StatusCode>());
 		this.goToSection("Me");
 		this.people.extend({ deferred: true });
 	}
@@ -198,6 +204,7 @@ class InOutBoardViewModel {
 
 		// the "me" tab
 		if (section == "Me") {
+			const promise = this.getStatusCodes();
 			let xhr = new XMLHttpRequest();
 			xhr.open("GET", "/api/user/");
 			xhr.onload = (ev) => {
@@ -213,8 +220,8 @@ class InOutBoardViewModel {
 					this.user().ID = user.ID;
 					this.user().Name(user.Name);
 					this.user().Username = user.Username;
-					this.user().Status(user.Status);
-					this.user().StatusValue(user.StatusValue);
+					this.user().Status(user.Status.Code);
+					this.user().StatusValue(user.Status.Value);
 					this.user().Remarks(user.Remarks);
 					this.user().StatusValue.subscribe(this.user().save);
 					this.user().LastEditTime(user.LastEditTime);
@@ -280,8 +287,18 @@ class InOutBoardViewModel {
 						person.ID = jsperson.ID;
 						person.Username = jsperson.Username;
 						person.Name(jsperson.Name);
-						person.Status(jsperson.Status);
-						person.StatusValue(jsperson.StatusValue);
+						person.Status(jsperson.Status.Code);
+						person.StatusValue(jsperson.Status.Value);
+						person.Status.subscribe((nv) => {
+							this.getStatusCodes().then((res) => {
+								for (let s of res) {
+									if (s.Code == nv) {
+										person.StatusValue(s.Value);
+										break;
+									}
+								}
+							});
+						});
 						person.Remarks(jsperson.Remarks);
 						person.error.subscribe(this.error);
 						person.LastEditor(jsperson.LastEditor);
@@ -357,6 +374,39 @@ class InOutBoardViewModel {
 		this.sections.push(person.Name());
 		this.selectedUser(person);
 		this.goToSection(person.Name());
+	}
+
+	// Get a list of status codes a person can have
+	// this is cached
+	getStatusCodes(): Promise<StatusCode[]> {
+		return new Promise<StatusCode[]>((resolve, reject) => {
+		if (typeof(this.statuses()) === null || this.statuses().length == 0) {
+			let xhr = new XMLHttpRequest();
+			xhr.open("GET","/api/statuscodes");
+			xhr.onload = () => {
+				if (xhr.status === 401) {
+					// what now?
+				} else if (xhr.status >= 400) {
+					console.log("Error: " + xhr.status + " could not get status codes")
+					throw new Error("Failed to get status codes");
+				}
+				let statuses = JSON.parse(xhr.response);
+				statuses = statuses.sort((n1: StatusCode, n2: StatusCode) => {
+					return n1.Code < n2.Code? -1: n1.Code === n2.Code? 0: 1;
+				});
+				for (let stat of statuses) {
+					this.statuses.push(stat);
+				}
+				resolve(this.statuses());
+			}
+			xhr.onerror = () => {
+				throw new Error("Failed to get status codes");
+			}
+			xhr.send();
+		} else {
+			resolve(this.statuses());
+		}
+		});
 	}
 }
 

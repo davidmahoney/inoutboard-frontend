@@ -20,6 +20,10 @@ div.content {
 	margin: 0;
 }
 
+a {
+	color: #0088cc;
+}
+
 @media screen and (max-width: 480px) {
 input[type=button] input[type=submit] {
 	background: #bbb;
@@ -217,7 +221,8 @@ table.people th:nth-child(4) {
 }
 
 .people tr {
-	  border-top: 1px solid #ccc;
+	border-top: 1px solid #ccc;
+	cursor: pointer;
 }
 
 .loading {
