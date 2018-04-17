@@ -92,25 +92,17 @@ div.header {
 	background-repeat: no-repeat;
 	background-size: cover;
 	display: flex;
-	padding: 8px;
 	width: 100%;
 	top: 0px;
-}
-
-.header > div {
-	align-items: center;
-	display: flex;
-	padding: 8px;
+        align-items: center;
 }
 
 .header h1 {
-	margin-left: 30px;
-	height: 100%;
-	width: 100%;
-	color: #222244;
+	color: #fff;
+	text-shadow: rgba(40, 40, 40, 0.5) 3px 3px 3px;
 }
 .header img {
-	margin: 8px 0 0 8px;
+	margin: 8px;
 	height: 80px;
 
 }
@@ -157,7 +149,7 @@ table.people {
 }
 table.people th, table.people td {
 	  padding: .4em;
-	  white-space: nowrap;
+	  white-space: pre-wrap;
 }
 table.people > tbody.group_header > tr {
 	  border: none;

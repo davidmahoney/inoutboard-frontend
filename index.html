@@ -63,7 +63,7 @@
 					</tr></thead>
 				<!-- ko foreach: $root.people -->
 				<tbody class="group_header" data-bind="click: toggleActive, css: {'open': active}">
-					<tr><td></td><td data-bind="text: label"></td><td></td><td></td><td></td><td></td></tr>
+					<tr><td></td><td data-bind="text: label"></td><td></td><td></td><td class="desktop-only"></td><td class="desktop-only"></td></tr>
 				</tbody>
 				<tbody class="fold" data-bind="foreach: people, css: {'open': active}">
 					<tr data-bind="click: $root.viewPerson, css: { saved: saveSuccess(), badSave: saveSuccess() === false}">
@@ -72,8 +72,6 @@
 						<td data-bind="text: Name"></td> 
 						<td><select data-bind="options: $root.statuses, value: StatusValue"></select></td>
 						<td colspan="3"><textarea id="remarksField" rows="3" data-bind="value: Remarks, attr: {placeholder: Remarks.placeholder}" ></textarea></td>
-						<td class="desktop-only"></td>
-						<td class="desktop-only"></td>
 						<!-- /ko -->
 						<!-- ko ifnot: IsEditing -->
 						<td style="cursor: pointer;" data-bind="click: $root.editPerson, clickBubble: false">&#x270e;</td>
