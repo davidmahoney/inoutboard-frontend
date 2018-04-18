@@ -143,20 +143,26 @@ div.header {
 
 .person dt {
 	clear: left;
-       /*! float: left; */
 	padding: 5px;
-	 /*! width: 100px; */
 	margin: 0;
 	border-top: 1px solid #999;
 	font-weight: bold;
 }
 
 .person dd {
-	/* float: left; */
 	margin: 0;
 	padding: 5px;
 	width: 300px;
-       /*! order-top: 1px solid #999; */
+}
+
+@media screen and (min-width: 800px) {
+    .disabled-link {
+        pointer-events: none;
+        text-decoration: none;
+        cursor: default;
+        color: black;
+        display: inline-block; /*! IE sucks */
+    }
 }
 
 table.people {

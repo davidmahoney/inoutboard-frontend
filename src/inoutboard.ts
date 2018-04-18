@@ -1,3 +1,4 @@
+/* vim: set filetype=javascript : */
 import * as ko from "knockout";
 
 interface IHash<T> {
@@ -10,8 +11,16 @@ class StatusCode {
 }
 
 var dateFormat = new Intl.DateTimeFormat('en-US', {month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric'});
-var formatPhone = (n: string) => { return n.replace(' ', '').replace('(', '').replace('(',''); }
+var formatPhone = (n: string) => { 
+        if (n[0] !== "1") {
+            n = "1" + n;
+        }
+        return n.replace(' ', '').replace('(', '').replace('(',''); 
+    }
 
+/* 
+ * A person to be displayed in the UI
+ */
 class Person {
 	ID: number
 	Name: KnockoutObservable<string>
@@ -65,6 +74,9 @@ class Person {
 			setTimeout(() => { this.saveSuccess(null);}, 2000);
 		});
 	}
+    /*
+     * Save the user back to the server
+     */
 	save = () => {
 		let xhr = new XMLHttpRequest();
 		xhr.open("PUT", "/api/user/" + this.Username);
@@ -111,6 +123,9 @@ class Person {
 
 }
 
+/*
+ * A group of people. Could be a Department, or whatever.
+ */
 class PersonGroup {
 	label: KnockoutObservable<string>
 	people: KnockoutObservableArray<Person>
@@ -127,18 +142,33 @@ class PersonGroup {
 	}
 }
 
+/*
+ * The main viewmodel to be displayed.
+ */
 class InOutBoardViewModel {
+    // a list of available views
 	sections:  KnockoutObservableArray<string>
+    // all the PersonGroup objects
 	people: KnockoutObservableArray<PersonGroup>
+    // the Person object for the currently logged in user
 	user: KnockoutObservable<Person>
+    // the name of the currently selected view
 	chosenSectionId: KnockoutObservable<string>
+    // whether or not the user is authenticated
 	mustLogin: KnockoutObservable<string>
+    // the username of the logged in user
 	username: KnockoutObservable<string>
+    // the password to be authenticated against
 	password: KnockoutObservable<string>
+    // errors returned from the server
 	error: KnockoutObservable<string>
-	selectedUser: KnockoutObservable<Person>
+    // the currently selected Person objects for the details view
+    selectedUser: KnockoutObservable<Person>
+    // whether or not we're loading data from the server
 	loading: KnockoutObservable<Boolean>
+    // a list of available Person status codes
 	statuses: KnockoutObservableArray<StatusCode>
+    // the ID for the refresh timeout loop
 	refreshId: number
 
 
@@ -160,6 +190,10 @@ class InOutBoardViewModel {
 		this.people.extend({ deferred: true });
 	}
 
+    /*
+     * Try to log into the server with the entered
+     * username and password
+     */
 	login = () => {
 		let xhr = new XMLHttpRequest();
 		xhr.open("POST", "/login");
@@ -182,6 +216,9 @@ class InOutBoardViewModel {
 		xhr.send(content);
 	}
 
+    /*
+     * Switch between views
+     */
 	goToSection = (section: string) => {
 		this.error("");
 		// stop refreshing the everyone tab
@@ -360,11 +397,18 @@ class InOutBoardViewModel {
 		this.chosenSectionId(section);
 	}
 
+    /*
+     * Select a Person object to be edited
+     */
 	editPerson = (person: Person) => {
 		person.saveSuccess(null);
 		person.IsEditing(true);
 	}
 
+    /*
+     * Add a person details view to the sections list
+     * and switch to it
+     */
 	viewPerson = (person: Person) => {
 		if (person.IsEditing()) { return; }
 		this.sections.push(person.Name());
@@ -372,8 +416,10 @@ class InOutBoardViewModel {
 		this.goToSection(person.Name());
 	}
 
-	// Get a list of status codes a person can have
-	// this is cached
+    /* 
+     * Get a list of status codes a person can have
+	 * this is cached
+     */
 	getStatusCodes(): Promise<StatusCode[]> {
 		return new Promise<StatusCode[]>((resolve, reject) => {
 		if (typeof(this.statuses()) === null || this.statuses().length == 0) {
@@ -406,5 +452,6 @@ class InOutBoardViewModel {
 	}
 }
 
+// actually create the root viewmodel
 ko.applyBindings(new InOutBoardViewModel());
 
