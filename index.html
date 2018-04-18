@@ -19,19 +19,21 @@
 					click: $root.goToSection"></li>
 			</ul>
 		</div>
-		<div class="content">
-			<div class="loading" data-bind="visible: loading">
-			</div>
-		<form style="display: none;" data-bind="visible: mustLogin">
-			<p>
-			<label for="usernameField">Username: </label>
-			<input type="text" autocapitalize="off" id="usernameField" data-bind="value: $root.username">
-			<p>
-			<label for="passwordField">Password: </label>
-			<input type="password" id="passwordField" data-bind="value: $root.password">
-			<p>
-			<input type="submit" value="Login" data-bind="click: $root.login">
-		</form>
+        <div class="content">
+            <div class="loading" data-bind="visible: loading">
+            </div>
+            <div class="mystatus login">
+                <form style="display: none;" data-bind="visible: mustLogin">
+                    <p>
+                    <label for="usernameField">Username: </label>
+                    <input type="text" autocapitalize="off" id="usernameField" data-bind="value: $root.username">
+                    <p>
+                    <label for="passwordField">Password: </label>
+                    <input type="password" id="passwordField" data-bind="value: $root.password">
+                    <p>
+                    <input type="submit" value="Login" data-bind="click: $root.login">
+                </form>
+            </div>
 		<p data-bind="text: error" class="errorText">
 		</p>
 		<div style="display: none;" class="mystatus" data-bind="visible: user() !== null, with: user, css: { saved: user() !== null && user().saveSuccess(), baseSave: user() !== null && user().saveSuccess() === false}">

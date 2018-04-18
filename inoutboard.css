@@ -24,8 +24,21 @@ a {
 	color: #0088cc;
 }
 
+.login form {
+    display: table;
+    border-spacing: 8px;
+}
+
+.login p {
+    display: table-row
+}
+
+.login input, label {
+    display: table-cell
+}
+
 @media screen and (max-width: 480px) {
-input[type=button] input[type=submit] {
+input[type=button], input[type=submit] {
 	background: #bbb;
 	border: 1px solid #999;
 	padding: 8px;
