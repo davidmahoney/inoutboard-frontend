@@ -8,6 +8,11 @@ interface IHash<T> {
 class StatusCode {
 	Code: number
 	Value: string
+
+	constructor() {
+		this.Code = 0;
+		this.Value = "";
+	}
 }
 
 var dateFormat = new Intl.DateTimeFormat('en-US', {month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric'});
@@ -41,32 +46,34 @@ class Person {
 	saveSuccess: KnockoutObservable<Boolean>
 
 	constructor() {
-		this.error = ko.observable(null);
+		this.ID = 0;
+		this.Username = "";
+		this.error = ko.observable<string>(null);
 		this.loading = ko.observable(false);
-		this.Name = ko.observable(null);
-		this.Status = ko.observable(null);
-		this.StatusValue = ko.observable(null);
-		this.Remarks = ko.observable(null);
+		this.Name = ko.observable<string>(null);
+		this.Status = ko.observable<number>(null);
+		this.StatusValue = ko.observable<string>(null);
+		this.Remarks = ko.observable<string>(null);
 		this.Remarks.placeholder = ko.pureComputed(() => { 
 			return  "Return time, regular schedule, availability"; });
 		this.IsEditing = ko.observable(false);
-		this.LastEditor = ko.observable(null);
-		this.LastEditTime = ko.observable(null);
+		this.LastEditor = ko.observable<string>(null);
+		this.LastEditTime = ko.observable<Date>(null);
 		this.LastEditTime.formatted = ko.pureComputed(() => {
 			return dateFormat.format(this.LastEditTime());
 		});
-		this.Group = ko.observable(null);
-		this.Telephone = ko.observable(null);
+		this.Group = ko.observable<string>(null);
+		this.Telephone = ko.observable<string>(null);
 		this.Telephone.Url = ko.pureComputed(() => {
 			return formatPhone(this.Telephone() || "");
 		});
-		this.Mobile = ko.observable(null);
+		this.Mobile = ko.observable<string>(null);
 		this.Mobile.Url = ko.pureComputed(() => {
 			return formatPhone(this.Mobile() || "");
 		});
-		this.Office = ko.observable(null);
-		this.Title = ko.observable(null);
-		this.saveSuccess = ko.observable(null);
+		this.Office = ko.observable<string>(null);
+		this.Title = ko.observable<string>(null);
+		this.saveSuccess = ko.observable<Boolean>(null);
 		this.saveSuccess.subscribe(() => {
 			// kinda hacky, but remove the success
 			// setting so that the animation in the 
@@ -146,45 +153,44 @@ class PersonGroup {
  * The main viewmodel to be displayed.
  */
 class InOutBoardViewModel {
-    // a list of available views
+	// a list of available views
 	sections:  KnockoutObservableArray<string>
-    // all the PersonGroup objects
+	// all the PersonGroup objects
 	people: KnockoutObservableArray<PersonGroup>
-    // the Person object for the currently logged in user
+	// the Person object for the currently logged in user
 	user: KnockoutObservable<Person>
-    // the name of the currently selected view
+	// the name of the currently selected view
 	chosenSectionId: KnockoutObservable<string>
-    // whether or not the user is authenticated
+	// whether or not the user is authenticated
 	mustLogin: KnockoutObservable<string>
-    // the username of the logged in user
+	// the username of the logged in user
 	username: KnockoutObservable<string>
-    // the password to be authenticated against
+	// the password to be authenticated against
 	password: KnockoutObservable<string>
-    // errors returned from the server
+	// errors returned from the server
 	error: KnockoutObservable<string>
-    // the currently selected Person objects for the details view
-    selectedUser: KnockoutObservable<Person>
-    // whether or not we're loading data from the server
+	// the currently selected Person objects for the details view
+	selectedUser: KnockoutObservable<Person>
+	// whether or not we're loading data from the server
 	loading: KnockoutObservable<Boolean>
-    // a list of available Person status codes
+	// a list of available Person status codes
 	statuses: KnockoutObservableArray<StatusCode>
-    // the ID for the refresh timeout loop
-	refreshId: number
+	// the ID for the refresh timeout loop
+	refreshId: number = 0;
 
 
 	constructor() {
 		this.loading = ko.observable(false);
 		this.error = ko.observable("");
-		this.chosenSectionId = ko.observable(null);
-		this.people = null;
-		this.username = null;
-		this.user = ko.observable(null);
+		this.chosenSectionId = ko.observable<string>(null);
+		this.username = ko.observable<string>(null);
+		this.user = ko.observable<Person>(null);
 		this.people = ko.observableArray<PersonGroup>(new Array<PersonGroup>());
-		this.mustLogin = ko.observable(null);
+		this.mustLogin = ko.observable<string>(null);
 		this.username = ko.observable("");
 		this.password = ko.observable("");
 		this.sections = ko.observableArray(["Me", "Everyone"])
-		this.selectedUser = ko.observable(null);
+		this.selectedUser = ko.observable<Person>(null);
 		this.statuses = ko.observableArray<StatusCode>(new Array<StatusCode>());
 		this.goToSection("Me");
 		this.people.extend({ deferred: true });
