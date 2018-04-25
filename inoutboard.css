@@ -133,6 +133,10 @@ div.header {
 	}
 }
 
+th.desktop-only {
+    min-width: 7.5em;
+}
+
 .person dl {
 	margin: 1em;
 	margin: 0;
@@ -170,6 +174,11 @@ table.people {
 	    width: 100%;
 	    max-width: 1200;
 }
+
+table.people th:last-child {
+    min-width: 64px;
+}
+
 table.people th, table.people td {
 	  padding: .4em;
 	  white-space: pre-wrap;

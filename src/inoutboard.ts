@@ -15,7 +15,14 @@ class StatusCode {
 	}
 }
 
-var dateFormat = new Intl.DateTimeFormat('en-US', {month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric'});
+var dateFormat: any;
+if (typeof(Intl) === "undefined") {
+    dateFormat = { format: (d: Date): string => { return d.toLocaleString(); }};
+} else { 
+    dateFormat = new Intl.DateTimeFormat('en-US', {month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric'});
+}
+
+
 var formatPhone = (n: string) => { 
         if (n[0] !== "1") {
             n = "1" + n;
