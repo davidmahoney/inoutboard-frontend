@@ -141,19 +141,42 @@ class Person {
  * A group of people. Could be a Department, or whatever.
  */
 class PersonGroup {
+    // filter the list of visible users
+    filterString: KnockoutObservable<string>
+    // the name of this group
 	label: KnockoutObservable<string>
-	people: KnockoutObservableArray<Person>
+    // the (filtered) list of people
+    people: KnockoutObservable<Person[]>
+    // whether or not the group is active (expanded in the view)
 	active: KnockoutObservable<Boolean>
+    // the full list of people
+    allPeople: KnockoutObservableArray<Person>
 
 	constructor(label: string, people: Person[]) {
-		this.label = ko.observable(label)
-		this.people = ko.observableArray<Person>(people)
+		this.label = ko.observable(label);
+        this.filterString = ko.observable<string>("");
+        this.allPeople = ko.observableArray(people);
 		this.active = ko.observable<Boolean>(false);
+        this.people = ko.computed({ owner: this, read: this.filter });
+        this.filterString.subscribe((s: string) => {
+            if (s !== "") this.active(true); 
+        });
 	}
 
 	toggleActive = () => {
 		this.active(!this.active());
-	}
+    }
+
+    filter = (): Array<Person> => {
+        if (this.filterString() === "")
+            return this.allPeople().slice();
+        else
+            return this.allPeople().filter((element: Person, index: number, array: any) => { 
+                return element.Name()
+                    .toLowerCase()
+                    .lastIndexOf(this.filterString().toLowerCase(), 0) === 0
+            });
+    }
 }
 
 /*
@@ -184,7 +207,8 @@ class InOutBoardViewModel {
 	statuses: KnockoutObservableArray<StatusCode>
 	// the ID for the refresh timeout loop
 	refreshId: number = 0;
-
+    // filter the list of users
+    filterString: KnockoutObservable<string>
 
 	constructor() {
 		this.loading = ko.observable(false);
@@ -201,6 +225,7 @@ class InOutBoardViewModel {
 		this.statuses = ko.observableArray<StatusCode>(new Array<StatusCode>());
 		this.goToSection("Me");
 		this.people.extend({ deferred: true });
+        this.filterString = ko.observable("");
 	}
 
     /*
@@ -378,13 +403,14 @@ class InOutBoardViewModel {
 						});
 						if (group === null) {
 							group = new PersonGroup(k, mapped[k]);
+                            this.filterString.subscribe(group.filterString);
 							if (k === myDepartment) {
 								group.active(true);
 							}
 							this.people.push(group);
 						} else {
-							group.people.removeAll();
-							group.people(mapped[k]);
+							group.allPeople.removeAll();
+							group.allPeople(mapped[k]);
 						}
 					});
 					this.loading(false);

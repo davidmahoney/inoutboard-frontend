@@ -6,6 +6,12 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<title>In/Out Board</title>
 		<link href="inoutboard.css" rel="stylesheet" type="text/css" />
+    <script>
+        function hideKeyoard() {
+            let box = document.getElementById("filterBox");
+            box.blur();
+        }
+    </script>
 	</head>
 	<body>
 		<div class="header">
@@ -54,7 +60,8 @@
 		</form>
 		</div>
 		<div style="display:none;" class="people" data-bind="visible: (chosenSectionId() == 'Everyone')">
-			<form>
+            <form data-bind="submit: function(data, event) { document.getElementById('filterBox').blur(); }, clickBubble: false">
+                <input id="filterBox" type="search" autocapitalize="off" id="filterField" placeholder="filter people" size="30" style="margin: 8px;" data-bind="textInput: filterString"></input>
 				<table class="people">
 					<thead><tr>
 						<th></th>
