@@ -122,7 +122,7 @@
 			</dl>
 		</div>
 		</div>
-		<script data-main="inoutboard.built" type="text/javascript" src="require.js"></script>
+        <!--<script data-main="inoutboard.built" type="text/javascript" src="require.js?v=20180717"></script>-->
 		<script>
 			if (typeof(CSS) == "undefined" || !CSS.supports('position', 'sticky')) {
 				window.onscroll = function() {
@@ -138,12 +138,14 @@
 				};
 			}
 		</script>
-		<!--
 		
-		<script type="text/javascript" src="require-config.js"></script>
+		<script type="text/javascript" src="require.js"></script>
 		<script>
-			require(["inoutboard"]);
-		</script> -->
+            require.config({
+                urlArgs: "v=20180717"
+            });
+			require(["inoutboard.built"]);
+		</script>
 	</body>
 </html>
 

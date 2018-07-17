@@ -1,5 +1,5 @@
 TSC=tsc
-LIBS=built/knockout-latest.js built/require.js built/es6-promise.js
+LIBS=built/knockout-latest.js built/require.js built/es6-promise.auto.js
 FILES=built/index.html built/inoutboard.css built/loading.svg
 SRC=built/src/inoutboard.ts built/src/require-config.ts
 RJS=node_modules/requirejs/bin/r.js
