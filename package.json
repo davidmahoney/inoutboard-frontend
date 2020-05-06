@@ -23,5 +23,7 @@
     "requirejs": "^2.3.3"
   },
   "devDependencies": {
+    "tsc": "^1.20150623.0",
+    "typescript": "^3.8.3"
   }
 }

@@ -275,7 +275,10 @@ class InOutBoardViewModel {
 		if (section == "Me") {
 			const promise = this.getStatusCodes().catch((e) => {
 				// probably a 401
+				this.user(null);
+				this.mustLogin("true");
 			});
+			promise.then(() => {
 			let xhr = new XMLHttpRequest();
 			xhr.open("GET", "/api/user/");
 			xhr.onload = (ev) => {
@@ -329,7 +332,7 @@ class InOutBoardViewModel {
 			};
 			this.loading(true);
 			xhr.send();
-			
+			});
 			this.user(new Person());
 			this.chosenSectionId(section);
 
@@ -466,7 +469,7 @@ class InOutBoardViewModel {
 			xhr.open("GET","/api/statuscodes");
 			xhr.onload = () => {
 				if (xhr.status === 401) {
-					throw new Error();
+					reject(xhr.status);
 				} else if (xhr.status >= 400) {
 					console.log("Error: " + xhr.status + " could not get status codes")
 					throw new Error("Failed to get status codes");
