@@ -404,9 +404,9 @@ class InOutBoardViewModel {
 						let group = ko.utils.arrayFirst(this.people(), function(g) {
 							return g.label() === k;
 						});
-						if (group === null) {
+						if (group === undefined) {
 							group = new PersonGroup(k, mapped[k]);
-                            this.filterString.subscribe(group.filterString);
+							this.filterString.subscribe(group.filterString);
 							if (k === myDepartment) {
 								group.active(true);
 							}
