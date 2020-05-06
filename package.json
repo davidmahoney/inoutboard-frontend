@@ -19,7 +19,7 @@
   "dependencies": {
     "@types/knockout": "^3.4.40",
     "es6-promise": "^4.2.4",
-    "knockout": "^3.4.2",
+    "knockout": "^3.5.1",
     "requirejs": "^2.3.3"
   },
   "devDependencies": {
